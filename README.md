@@ -5,13 +5,13 @@
  #### 在Yunzai根目录运行以下命令
 
 1、Github源：
-```bash
+
     curl -o "./plugins/iloli-plugin" "https://raw.githubusercontent.com/T060925ZX/iloli-plugin.git"
-```
+
 2、mirror源:
-```bash
+
     curl -o "./plugins/iloli-plugin" "https://ghp.ci/https://raw.githubusercontent.com/T060925ZX/iloli-plugin.git"
-```
+
 ### 功能菜单图:
 <details><summary>展开</summary>
 
