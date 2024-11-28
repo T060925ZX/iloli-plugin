@@ -32,7 +32,7 @@
 
 | 名单 | 主要贡献 |
 |:----: |:----: |
-| [@Jiaozi](https://github.com/T060925ZX) | 原神面板图 |
+| [@Jiaozi](https://github.com/T060925ZX) | 新建文件夹（bushi |
 
 
 
