@@ -21,7 +21,7 @@ if (!fs.existsSync(configDir)) {
     if (fs.existsSync(sourceFile)) {
       fs.copyFileSync(sourceFile, targetFile)
       //console.log(`文件已复制: ${file}`)
-      console.log(`iloli-plugin 初始化....`)
+      console.log(`[iloli-plugin] 初始化....`)
     } else {
       console.warn(`警告: 源文件 ${file} 不存在，无法复制`)
     }
@@ -43,7 +43,7 @@ for (let i in files) {
   let name = files[i].replace('.js', '')
 
   if (ret[i].status !== 'fulfilled') {
-    logger.error(`载入插件错误：${logger.red(name)}`)
+    logger.error(`[iloli-plugin] 载入插件错误：${logger.red(name)}`)
     logger.error(ret[i].reason)
     continue
   }

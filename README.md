@@ -1,3 +1,6 @@
+
+![](https://raw.githubusercontent.com/T060925ZX/iloli-plugin/refs/heads/main/resources/img.webp)
+
 # iloli-plugin
 
 ## 快速安装
