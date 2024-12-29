@@ -6,11 +6,9 @@
 
 1、Github源：
 
-    curl -o "./plugins/iloli-plugin" "https://raw.githubusercontent.com/T060925ZX/iloli-plugin.git"
+    curl -o "./plugins/iloli-plugin" "https://github.com/T060925ZX/iloli-plugin.git"
 
-2、mirror源:
 
-    curl -o "./plugins/iloli-plugin" "https://ghp.ci/https://raw.githubusercontent.com/T060925ZX/iloli-plugin.git"
 
 ### 功能菜单图:
 <details><summary>展开</summary>

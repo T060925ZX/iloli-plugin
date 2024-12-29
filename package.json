@@ -1,0 +1,14 @@
+{
+    "name": "iloli-plugin",
+    "version": "1.6.8",
+    "author": "@饺子 @向日葵",
+    "description": "Yunzai-Bot功能性插件",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {},
+    "dependencies": {
+      "puppeteer": "*",
+      "axios": "*"
+    }
+  }
+  
