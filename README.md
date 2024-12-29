@@ -57,6 +57,6 @@ pnpm install --filter=iloli-plugin
 
 
 > [!TIP]
-> 饺子插件交流群 [983299064](https://qm.qq.com/q/ciLUvOjDyw) 
+> Jiaozi插件交流群 [983299064](https://qm.qq.com/q/ciLUvOjDyw) 
 >
 > 向日葵插件交流群 [1013495491](https://qm.qq.com/q/1zJVAwH5Ig) 
