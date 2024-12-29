@@ -3,15 +3,28 @@
 
 # iloli-plugin
 
-## 快速安装
+## 安装插件
 
- #### 在Yunzai根目录运行以下命令
+#### 1. 克隆仓库
 
-1、Github源：
+    git clone https://gitee.com/tu-zhengxiong0925/iloli-plugin.git ./plugins/iloli-plugin
 
-    curl -o "./plugins/iloli-plugin" "https://github.com/T060925ZX/iloli-plugin.git"
+> [!NOTE]
+> 如果你的网络环境较差，无法连接到 Github，可以使用 [GitHub Proxy](https://ghproxy.link/) 提供的文件代理加速下载服务
+>
+> ```
+> git clone https://ghgo.xyz/https://gitee.com/tu-zhengxiong0925/iloli-plugin.git ./plugins/iloli-plugin
+> ```
+> Gitee源（更新较慢）：
+> ```
+> git clone https://ghgo.xyz/https://gitee.com/tu-zhengxiong0925/iloli-plugin.git ./plugins/iloli-plugin
+> ```
 
+#### 2. 安装依赖
 
+```
+pnpm install --filter=iloli-plugin
+```
 
 ### 功能菜单图:
 <details><summary>展开</summary>
@@ -27,6 +40,12 @@
   
 </div>
 
+## 支持与贡献
+
+如果你喜欢这个项目，请不妨点个 Star🌟，这是对开发者最大的动力 呜咪~❤️
+
+有意见或者建议也欢迎提交 [Issues](https://github.com/T060925ZX/iloli-plugin/issues) 和 [Pull requests](https://github.com/T060925ZX/iloli-plugin/pulls)
+
 ### 感谢那些默默付出的人
 ###### ***不分先后顺序***
 
@@ -37,4 +56,7 @@
 | [@向日葵](https://github.com/T060925ZX) | 共创 |
 
 
->Yunzai交流群 [983299064](https://qm.qq.com/q/ciLUvOjDyw) 
+> [!TIP]
+> 饺子插件交流群 [983299064](https://qm.qq.com/q/ciLUvOjDyw) 
+>
+> 向日葵插件交流群 [1013495491](https://qm.qq.com/q/1zJVAwH5Ig) 
