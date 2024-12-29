@@ -17,7 +17,7 @@
 > ```
 > Gitee源（更新较慢）：
 > ```
-> git clone https://ghgo.xyz/https://gitee.com/tu-zhengxiong0925/iloli-plugin.git ./plugins/iloli-plugin
+> git clone https://gitee.com/tu-zhengxiong0925/iloli-plugin ./plugins/iloli-plugin
 > ```
 
 #### 2. 安装依赖
@@ -26,13 +26,12 @@
 pnpm install --filter=iloli-plugin
 ```
 
-### 功能菜单图:
-<details><summary>展开</summary>
+## 功能列表
 
-图先欠着
+请使用 `#i帮助` 获取完整帮助
 
-</details>
-<br>
+- [x] 不知道
+
 
 <div align="left"> 
   
