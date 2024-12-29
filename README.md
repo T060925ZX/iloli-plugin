@@ -1,5 +1,5 @@
 
-![](https://raw.githubusercontent.com/T060925ZX/iloli-plugin/refs/heads/main/resources/img.webp)
+![](https://www.ghproxy.cn/https://raw.githubusercontent.com/T060925ZX/iloli-plugin/refs/heads/main/resources/img.webp)
 
 # iloli-plugin
 
@@ -34,7 +34,7 @@
 | 名单 | 主要贡献 |
 |:----: |:----: |
 | [@Jiaozi](https://github.com/T060925ZX) | 新建文件夹（bushi |
-
+| [@向日葵](https://github.com/T060925ZX) | 共创 |
 
 
 >Yunzai交流群 [983299064](https://qm.qq.com/q/ciLUvOjDyw) 
