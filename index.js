@@ -4,8 +4,8 @@ import path from 'node:path';
 const _path = process.cwd().replace(/\\/g, '/');
 
 // 检查并复制需要的配置文件
-const configDir = '${_path}/plugins/iloli-plugin/config';
-const defSetDir = '${_path}/plugins/iloli-plugin/defSet';
+const configDir = `${_path}/plugins/iloli-plugin/config`;
+const defSetDir = `${_path}/plugins/iloli-plugin/defSet`;
 
 const requiredFiles = [
   'config.yaml',
