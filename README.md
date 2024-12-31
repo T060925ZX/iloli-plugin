@@ -30,7 +30,7 @@ pnpm install --filter=iloli-plugin
 
 请使用 `#i帮助` 获取完整帮助
 
-- [x] 不知道
+- [x] 自动更新
 
 
 <div align="left"> 
