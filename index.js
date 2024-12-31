@@ -59,7 +59,7 @@ for (let i in files) {
   let name = files[i].replace('.js', '');
 
   if (ret[i].status !== 'fulfilled') {
-    logger.warn(`[iloli-plugin] 载入插件错误：${console.red(name)}`);
+    logger.warn(`[iloli-plugin] 载入插件错误：${logger.red(name)}`);
     console.error(ret[i].reason);
     continue;
   }
