@@ -2,7 +2,7 @@
     "name": "iloli-plugin",
     "version": "1.0.0-beta",
     "author": "@Jiaozi @向日葵",
-    "description": "Yunzai-Bot功能性插件",
+    "description": "Yunzai-Bot莉莉插件",
     "main": "index.js",
     "type": "module",
     "scripts": {},
