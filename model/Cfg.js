@@ -6,12 +6,12 @@ const _path = process.cwd().replace(/\\/g, '/');
 
 class Cfg {
   constructor() {
-    this.file = `${_path}/plugins/iloli-plugin/config`; 
-    this.defile = `${_path}/plugins/iloli-plugin/config`; 
+    this.file = `${_path}/plugins/iloli-plugin/config/`; 
+    this.defile = `${_path}/plugins/iloli-plugin/defSet/`; 
   }
 
   /** 解析单个配置文件 */
-  getconfig(file, name) {
+  getyaml(file, name) {
     let cfgyaml = path.join(file, `${name}.yaml`);
     const configData = fs.readFileSync(cfgyaml, 'utf8');
     return yaml.parse(configData);
