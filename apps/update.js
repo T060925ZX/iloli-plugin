@@ -17,10 +17,29 @@ export class UPDATE extends plugin {
             event: 'message',
             priority: 1,
             rule: [
-                { reg: /^(#|\/)?(莉莉|i|iloli)(强制)?(更新)$/i, fnc: 'UPDATE' }
+                { reg: /^(#|\/)?(莉莉|i|iloli)(强制)?(更新)$/i, fnc: 'UPDATE' },
             ]
         })
     }
+
+async getGitUpdateLog() {
+    let cm = 'git log --oneline --pretty=format:"%h||[%cd]  %s" --date=format:"%m-%d %H:%M"';
+    let logAll;
+    try {
+        logAll = await execSync(cm, { encoding: 'utf-8' });
+    } catch (error) {
+        logger.error(error.toString());
+        return error.toString();
+    }
+    if (!logAll) return '没有更新日志。';
+    logAll = logAll.split('\n');
+    let log = [];
+    for (let str of logAll) {
+        if (str.trim() === '') continue;
+        log.push(str);
+    }
+    return log.join('\n\n');
+}
 
     async UPDATE(e) {
         if (!e.isMaster) return e.reply('只有主人才能命令哦~')
