@@ -170,7 +170,7 @@ async function getLog(plugin, oldCommitId, e, autoUpdate = false) {
     }
     if(!autoUpdate) {
         if(Bot[e.self_id].adapter != `QQBot` && Bot[e.self_id].adapter != `QQGuild`) {
-            log.push(`更多详细信息，请前往gitee查看\nhttps://gitee.com/qiannqq/iloli-plugin/commits/master\n或者前往github查看\nhttps://github.com/qiannqq/iloli-plugin/commits/master`)
+            log.push(`更多详细信息，请前往github查看\nhttps://github.com/T060925ZX/iloli-plugin/commits/main`)
         }
     }
     return log;
