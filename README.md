@@ -7,13 +7,13 @@
 
 #### 1. 克隆仓库
 
-    git clone https://gitee.com/tu-zhengxiong0925/iloli-plugin.git ./plugins/iloli-plugin
+    git clone https://github.com/T060925ZX/iloli-plugin.git ./plugins/iloli-plugin
 
 > [!NOTE]
 > 如果你的网络环境较差，无法连接到 Github，可以使用 [GitHub Proxy](https://ghproxy.link/) 提供的文件代理加速下载服务
 >
 > ```
-> git clone https://ghgo.xyz/https://gitee.com/tu-zhengxiong0925/iloli-plugin.git ./plugins/iloli-plugin
+> git clone https://ghgo.xyz/https://github.com/T060925ZX/iloli-plugin.git ./plugins/iloli-plugin
 > ```
 > Gitee源（更新较慢）：
 > ```
@@ -30,7 +30,7 @@ pnpm install --filter=iloli-plugin
 
 请使用 `#i帮助` 获取完整帮助
 
-- [x] 不知道
+- [x] 自动更新
 
 
 <div align="left"> 
