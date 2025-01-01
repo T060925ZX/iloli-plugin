@@ -1,53 +1,73 @@
-import fs from 'node:fs'
-import path from 'node:path'
+import fs from 'node:fs';
+import path from 'node:path';
+
+const _path = process.cwd().replace(/\\/g, '/');
 
 // 检查并复制需要的配置文件
-const configDir = './plugins/iloli-plugin/config'
-const defSetDir = './plugins/iloli-plugin/defSet'
+const configDir = `${_path}/plugins/iloli-plugin/config`;
+const defSetDir = `${_path}/plugins/iloli-plugin/defSet`;
 
 const requiredFiles = [
   'config.yaml',
   'help.yaml'
-]
+];
+
+logger.mark(`======0ε٩(๑> ₃ <)۶з ======`);
 
 // 检查 config 目录是否存在，不存在则复制文件
 if (!fs.existsSync(configDir)) {
-  fs.mkdirSync(configDir, { recursive: true })  // 创建 config 目录
+  fs.mkdirSync(configDir, { recursive: true }); 
   
   requiredFiles.forEach(file => {
-    const sourceFile = path.join(defSetDir, file)
-    const targetFile = path.join(configDir, file)
+    const sourceFile = path.join(defSetDir, file);
+    const targetFile = path.join(configDir, file);
 
     if (fs.existsSync(sourceFile)) {
-      fs.copyFileSync(sourceFile, targetFile)
-      //console.log(`文件已复制: ${file}`)
-      console.log(`[iloli-plugin] 初始化....`)
+      fs.copyFileSync(sourceFile, targetFile);
+      logger.mark(`初始化 ${file} 文件...`);
     } else {
-      console.warn(`警告: 源文件 ${file} 不存在，无法复制`)
+      logger.warn(`警告: 源文件 ${file} 不存在，无法复制`);
     }
-  })
+  });
 }
 
-const files = fs.readdirSync('./plugins/iloli-plugin/apps').filter(file => file.endsWith('.js'))
+// 异步函数获取插件版本
+async function globalVersion() {
+  let PluginVersion = JSON.parse(fs.readFileSync(`${_path}/plugins/iloli-plugin/package.json`, 'utf-8'));
+  PluginVersion = PluginVersion.version; 
+  global.PluginVersion = PluginVersion;
+  return PluginVersion; 
+}
 
-let ret = []
+// 异步执行获取版本操作
+(async () => {
+  const version = await globalVersion();
+})();
+
+const files = fs.readdirSync(`${_path}/plugins/iloli-plugin/apps`).filter(file => file.endsWith('.js'));
+
+let ret = [];
 
 files.forEach((file) => {
-  ret.push(import(`./apps/${file}`))
-})
+  ret.push(import(`./apps/${file}`));
+});
 
-ret = await Promise.allSettled(ret)
+ret = await Promise.allSettled(ret);
 
-let apps = {}
+let apps = {};
 for (let i in files) {
-  let name = files[i].replace('.js', '')
+  let name = files[i].replace('.js', '');
 
   if (ret[i].status !== 'fulfilled') {
-    logger.error(`[iloli-plugin] 载入插件错误：${logger.red(name)}`)
-    logger.error(ret[i].reason)
-    continue
+    logger.warn(`[iloli-plugin] 载入插件错误：${logger.red(name)}`);
+    console.error(ret[i].reason);
+    continue;
   }
-  apps[name] = ret[i].value[Object.keys(ret[i].value)[0]]
+  apps[name] = ret[i].value[Object.keys(ret[i].value)[0]];
 }
 
-export { apps }
+logger.mark(`欢迎使用 [iloli-plugin]`);
+logger.mark(`当前版本: ${PluginVersion}`);
+logger.mark(`========================== `);
+
+export { apps };
