@@ -10,6 +10,8 @@ if (!global.segment) {
   }
 }
 
+const _path = process.cwd();
+
 // 异步函数获取插件版本
 async function globalVersion() {
   let PluginVersion = JSON.parse(fs.readFileSync(`${_path}/plugins/iloli-plugin/package.json`, 'utf-8'));
