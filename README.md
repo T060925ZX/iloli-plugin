@@ -6,12 +6,9 @@
 
 - 一个适用于 [Yunzai 系列机器人框架](https://github.com/yhArcadia/Yunzai-Bot-plugins-index) 的娱乐插件
 
-- **使用中遇到问题请加 QQ 群咨询：[1014823769](https://qm.qq.com/q/tkbstruiGI)**
+- 主要是写着玩，菜勿喷
 
-> [!TIP]
-> Jiaozi插件交流群 [983299064](https://qm.qq.com/q/ciLUvOjDyw) 
->
-> 向日葵插件交流群 [1013495491](https://qm.qq.com/q/1zJVAwH5Ig) 
+- **使用中遇到问题请加 QQ 群咨询：[1014823769](https://qm.qq.com/q/tkbstruiGI)**
 
 ## 安装插件
 
@@ -58,6 +55,9 @@ pnpm install --filter=iloli-plugin
 ### 感谢那些默默付出的人
 ###### ***不分先后顺序***
 
+
+> [!TIP]
+> Jiaozi插件交流群 [983299064](https://qm.qq.com/q/ciLUvOjDyw) 
 
 | 名单 | 主要贡献 |
 |:----: |:----: |
