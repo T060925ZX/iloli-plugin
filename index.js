@@ -52,8 +52,6 @@ if (!fs.existsSync(configDir)) {
   });
 }
 
-logger.mark(`======0ε٩(๑> ₃ <)۶з ======`);
-
 const versionData = Cfg.getdefSet("version", "version");
 
 const files = fs
@@ -80,6 +78,7 @@ for (let i in files) {
   apps[name] = ret[i].value[Object.keys(ret[i].value)[0]];
 }
 
+logger.mark(`======0ε٩(๑> ₃ <)۶з ======`);
 logger.mark(`欢迎使用 [iloli-plugin]`);
 logger.mark(`当前版本: ${PluginVersion}`);
 logger.mark(`========================== `);
