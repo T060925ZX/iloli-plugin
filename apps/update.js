@@ -1,160 +1,161 @@
+import plugin from "../../../lib/plugins/plugin.js";
 import { createRequire } from "module";
+import lodash from "lodash";
+import { Restart } from "../../other/restart.js";
+import Version from "../model/version.js";
+import Cfg from "../model/Cfg.js";
+import puppeteer from "../../../lib/puppeteer/puppeteer.js";
+
 const require = createRequire(import.meta.url);
 const { exec, execSync } = require("child_process");
-import Cfg from '../model/Cfg.js';
-import lodash from 'lodash'
 
-const { config } = Cfg.getConfig(`config`)
+// 是否在更新中
+let uping = false;
 
-let updateStatus = false
-
+/**
+ * 处理插件更新
+ */
 export class update extends plugin {
-    constructor() {
-        super({
-            name: '莉莉插件更新',
-            dsc: '莉莉插件更新',
-            event: 'message',
-            priority: 500,
-            rule: [
-                {
-                    reg: '^(#|/)?(莉莉|i|iloli)(强制)?更新$',
-                    fnc: '莉莉插件更新',
-                    //Permission: 'master'
-                }
-            ]
-        });
-        this.task = {
-            cron: Cfg.getConfig(`config`).updatetime,
-            name: '[iloli-plugin]自动更新',
-            fnc: this.autoupdate.bind(this)
-          }
+  constructor() {
+    super({
+      name: "更新插件",
+      dsc: "更新插件代码",
+      event: "message",
+      priority: 4000,
+      rule: [
+        {
+          reg: "^#*(i|萝莉|iloli|莉莉)(插件)?(强制)?更新",
+          fnc: "update",
+        },
+        {
+          reg: "^#*(i|萝莉|iloli|莉莉)(插件)?版本$",
+          fnc: "version",
+        },
+      ],
+    });
+
+    this.versionData = Cfg.getdefSet("version", "version");
+
+    // 设置自动更新任务
+    this.setupAutoUpdate();
+  }
+
+  /**
+   * 设置自动更新任务
+   */
+  setupAutoUpdate() {
+    cron.schedule("10 1 * * *", async () => {
+      console.log("开始执行自动更新任务...");
+      try {
+        await this.update();
+      } catch (error) {
+        console.error("自动更新失败：", error);
+      }
+    });
+  }
+
+  /**
+   * rule - 更新 [iloli-plugin]
+   * @returns
+   */
+  async update() {
+    if (!this.e?.isMaster && !uping) return false;
+
+    // 检查是否正在更新中
+    if (uping) {
+      await this.reply?.("已有命令更新中..请勿重复操作");
+      return;
     }
-    async autoupdate(){
-        if(updateStatus) return false
-        updateStatus = true
-        try {
-            const { config } = Cfg.getConfig(`config`)
-            if (!config.autoupdate) {
-                updateStatus = false
-                return true
-            };
-            let oldCommitId = await getcommitId(`iloli-plugin`)
-            const gitPullCmd = 'git -C ./plugins/iloli-plugin/ pull --no-rebase';
-            let ret = await execSyncc(gitPullCmd)
-            const pnpmCmd = 'cd ./plugins/iloli-plugin&& pnpm i --registry=https://registry.npmmirror.com'
-            await execSyncc(pnpmCmd)
 
-            if (ret.error) {
-                let stdout = ret.stdout.toString()
-                let errMsg = ret.error.toString()
-                let errmsgs;
-                if (errMsg.includes("Timed out")) {
-                    errmsgs = `连接超时`
-                }
-                if (/Failed to connect|unable to access/g.test(errMsg)) {
-                    errmsgs = `连接失败`
-                }
-                if (errMsg.includes("be overwritten by merge")) {
-                    errmsgs = `存在冲突，请解决冲突后再更新，或者执行#莉莉强制更新，放弃本地修改`
-                }
-                if (stdout.includes("CONFLICT")) {
-                    errmsgs = `存在冲突，请解决冲突后再更新，或者执行#莉莉强制更新，放弃本地修改`
-                }
-                logger.error(`莉莉插件：自动更新失败！\n${ret.error}\n${errmsgs}`)
-                updateStatus = false
-                return true;
-            }
-            let Newtime = await getTime(`iloli-plugin`)
-            if (/(Already up[ -]to[ -]date|已经是最新的)/.test(ret.stdout)) {
-                logger.mark(`莉莉插件：自动更新未发现新版本\n最后更新时间:${Newtime}`)
-                updateStatus = false
-                return true;
-            }
-            logger.mark(`莉莉插件：自动更新成功\n最后更新时间:${Newtime}`)
-            let updateLog = await getLog(`iloli-plugin`, oldCommitId, {}, true)
-            updateLog.join(`\n\n`)
-            logger.mark(updateLog)
-            updateStatus = false
-            return true
-        } catch {
-            updateStatus = false
-            return false
-        }
+    // 检查 git 是否安装
+    if (!(await this.checkGit())) return;
+
+    const isForce = this.e?.msg?.includes("强制");
+
+    // 执行更新
+    await this.runUpdate(isForce);
+
+    // 是否需要重启
+    if (this.isUp) {
+      setTimeout(() => this.restart(), 2000);
     }
-    async 莉莉插件更新(e) {
-        if (!e.isMaster) {
-            e.reply(`暂无权限，只有主人才能操作`)
-            return true;
-        }
+  }
 
-        if(updateStatus) {
-            await e.reply('[iloli-plugin]操作频繁')
-            return true
-        }
-        updateStatus = true
-        try {
-            const gitPullCmd = 'git -C ./plugins/iloli-plugin/ pull --no-rebase';
+  /**
+   * rule - 插件版本信息
+   */
+  async version() {
+    const data = await new Version(this.e).getData(
+      this.versionData.slice(0, 3)
+    );
+    let img = await puppeteer.screenshot("version", data);
+    this.e.reply(img);
+  }
 
-            let command = gitPullCmd;
+  /**
+   * 云崽重启操作
+   */
+  restart() {
+    new Restart(this.e).restart();
+  }
 
-            if (e.msg.includes("强制")) {
-                e.reply(`[iloli-plugin]正在执行强制更新操作，请稍等`)
-                command = `git -C ./plugins/iloli-plugin/ checkout . && ${gitPullCmd}`
-            } else {
-                e.reply(`[iloli-plugin]正在执行更新操作，请稍等`)
-            }
-            let oldCommitId = await getcommitId(`iloli-plugin`)
-
-
-            let ret = await execSyncc(command)
-            const pnpmCmd = 'cd ./plugins/iloli-plugin&& pnpm i --registry=https://registry.npmmirror.com'
-            await execSyncc(pnpmCmd)
-
-            if (ret.error) {
-                gitErr(ret.error, ret.stdout, e);
-                updateStatus = false
-                return true;
-            }
-
-            let msgList = [];
-            let time = await getTime(`iloli-plugin`)
-            if (/(Already up[ -]to[ -]date|已经是最新的)/.test(ret.stdout)) {
-                await e.reply(`莉莉插件已经是最新的了\n最后更新时间:${time}`)
-            } else {
-                await e.reply(`[iloli-plugin]莉莉插件 更新成功\n最后更新时间:${time}`)
-                let log = await getLog(`iloli-plugin`, oldCommitId, e)
-                for (let item of log) {
-                    msgList.push({
-                        user_id: Bot.uin,
-                        nickname: Bot.nickname,
-                        message: item
-                    })
-                }
-                try {
-                    msgList = await e.group.makeForwardMsg(msgList)
-                } catch (err) {
-                    msgList = await e.friend.makeForwardMsg(msgList)
-                }
-                await e.reply(msgList)
-                await e.reply(`请重启Yunzai以应用更新\n【#重启】`)
-            }
-            updateStatus = false
-        } catch {
-
-        }
+  /**
+   * [iloli-plugin]插件更新函数
+   * @param {boolean} isForce 是否为强制更新
+   * @returns
+   */
+  async runUpdate(isForce) {
+    let command = "git -C ./plugins/iloli-plugin/ pull --no-rebase";
+    if (isForce) {
+      command = `git -C ./plugins/iloli-plugin/ checkout . && ${command}`;
+      this.e.reply("正在执行强制更新操作，请稍等");
+    } else {
+      this.e.reply("正在执行更新操作，请稍等");
     }
-}
+    /** 获取上次提交的commitId，用于获取日志时判断新增的更新日志 */
+    this.oldCommitId = await this.getcommitId("iloli-plugin");
+    uping = true;
+    let ret = await this.execSync(command);
+    uping = false;
 
+    if (ret.error) {
+      logger.mark(`${this.e.logFnc} 更新失败：[iloli-plugin]插件`);
+      this.gitErr(ret.error, ret.stdout);
+      return false;
+    }
 
-async function getLog(plugin, oldCommitId, e, autoUpdate = false) {
+    /** 获取插件提交的最新时间 */
+    let time = await this.getTime("iloli-plugin");
+
+    if (/(Already up[ -]to[ -]date|已经是最新的)/.test(ret.stdout)) {
+      await this.reply(`[iloli-plugin]插件已经是最新版本\n最后更新时间：${time}`);
+    } else {
+      await this.reply(`[iloli-plugin]插件\n最后更新时间：${time}`);
+      this.isUp = true;
+      /** 获取[iloli-plugin]组件的更新日志 */
+      let log = await this.getLog("iloli-plugin");
+      await this.reply(log);
+    }
+
+    logger.mark(`${this.e.logFnc} 最后更新时间：${time}`);
+
+    return true;
+  }
+
+  /**
+   * 获取[iloli-plugin]的更新日志
+   * @param {string} plugin 插件名称
+   * @returns
+   */
+  async getLog(plugin = "") {
     let cm = `cd ./plugins/${plugin}/ && git log  -20 --oneline --pretty=format:"%h||[%cd]  %s" --date=format:"%m-%d %H:%M"`;
-    let logAll;
 
+    let logAll;
     try {
-        logAll = await execSync(cm, { encoding: "utf-8" });
+      logAll = await execSync(cm, { encoding: "utf-8" });
     } catch (error) {
-        logger.error(error.toString());
-        //e.reply(error.toString());
+      logger.error(error.toString());
+      this.reply(error.toString());
     }
 
     if (!logAll) return false;
@@ -163,80 +164,45 @@ async function getLog(plugin, oldCommitId, e, autoUpdate = false) {
 
     let log = [];
     for (let str of logAll) {
-        str = str.split("||");
-        if (str[0] == oldCommitId) break;
-        if (str[1].includes("Merge branch")) continue;
-        log.push(str[1]);
+      str = str.split("||");
+      if (str[0] == this.oldCommitId) break;
+      if (str[1].includes("Merge branch")) continue;
+      log.push(str[1]);
     }
-    if(!autoUpdate) {
-        if(Bot[e.self_id].adapter != `QQBot` && Bot[e.self_id].adapter != `QQGuild`) {
-            log.push(`更多详细信息，请前往github查看\nhttps://github.com/T060925ZX/iloli-plugin/commits/main`)
-        }
-    }
+    let line = log.length;
+    log = log.join("\n\n");
+
+    if (log.length <= 0) return "";
+
+    let end = "";
+    end =
+      "更多详细信息，请前往github查看\nhttps://github.com/T060925ZX/iloli-plugin";
+
+    log = await this.makeForwardMsg(`[iloli-plugin]更新日志，共${line}条`, log, end);
+
     return log;
-}
-/**
- * 获取上次提交的commitId
- * @param {string} plugin 插件名称
- * @returns 
- */
-async function getcommitId(plugin) {
+  }
+
+  /**
+   * 获取上次提交的commitId
+   * @param {string} plugin 插件名称
+   * @returns
+   */
+  async getcommitId(plugin = "") {
     let cm = `git -C ./plugins/${plugin}/ rev-parse --short HEAD`;
 
     let commitId = await execSync(cm, { encoding: "utf-8" });
     commitId = lodash.trim(commitId);
 
     return commitId;
-}
+  }
 
-async function execSyncc(cmd) {
-    return new Promise((resolve, reject) => {
-      exec(cmd, { windowsHide: true }, (error, stdout, stderr) => {
-        resolve({ error, stdout, stderr });
-      });
-    });
-}
-
-async function gitErr(err, stdout, e) {
-    let msg = "更新失败！";
-    let errMsg = err.toString();
-    stdout = stdout.toString();
-
-    if (errMsg.includes("Timed out")) {
-      let remote = errMsg.match(/'(.+?)'/g)[0].replace(/'/g, "");
-      await e.reply(msg + `\n连接超时：${remote}`);
-      return;
-    }
-
-    if (/Failed to connect|unable to access/g.test(errMsg)) {
-      let remote = errMsg.match(/'(.+?)'/g)[0].replace(/'/g, "");
-      await e.reply(msg + `\n连接失败：${remote}`);
-      return;
-    }
-
-    if (errMsg.includes("be overwritten by merge")) {
-      await e.reply(
-        msg +
-        `存在冲突：\n${errMsg}\n` +
-        "请解决冲突后再更新，或者执行#强制更新，放弃本地修改"
-      );
-      return;
-    }
-
-    if (stdout.includes("CONFLICT")) {
-      await e.reply([
-        msg + "存在冲突\n",
-        errMsg,
-        stdout,
-        "\n请解决冲突后再更新，或者执行#强制更新，放弃本地修改",
-      ]);
-      return;
-    }
-
-    await e.reply([errMsg, stdout]);
-}
-
-async function getTime(plugin){
+  /**
+   * 获取本次更新插件的最后一次提交时间
+   * @param {string} plugin 插件名称
+   * @returns
+   */
+  async getTime(plugin = "") {
     let cm = `cd ./plugins/${plugin}/ && git log -1 --oneline --pretty=format:"%cd" --date=format:"%m-%d %H:%M"`;
 
     let time = "";
@@ -248,4 +214,128 @@ async function getTime(plugin){
       time = "获取时间失败";
     }
     return time;
+  }
+
+  /**
+   * 制作转发消息
+   * @param {string} title 标题 - 首条消息
+   * @param {string} msg 日志信息
+   * @param {string} end 最后一条信息
+   * @returns
+   */
+  async makeForwardMsg(title, msg, end) {
+    let nickname = Bot.nickname;
+    if (this.e.isGroup) {
+      let info = await Bot.getGroupMemberInfo(this.e.group_id, Bot.uin);
+      nickname = info.card || info.nickname;
+    }
+    let userInfo = {
+      user_id: Bot.uin,
+      nickname,
+    };
+
+    let forwardMsg = [
+      {
+        ...userInfo,
+        message: title,
+      },
+      {
+        ...userInfo,
+        message: msg,
+      },
+    ];
+
+    if (end) {
+      forwardMsg.push({
+        ...userInfo,
+        message: end,
+      });
+    }
+
+    /** 制作转发内容 */
+    if (this.e.isGroup) {
+      forwardMsg = await this.e.group.makeForwardMsg(forwardMsg);
+    } else {
+      forwardMsg = await this.e.friend.makeForwardMsg(forwardMsg);
+    }
+
+    /** 处理描述 */
+    forwardMsg.data = forwardMsg.data
+      .replace(/\n/g, "")
+      .replace(/<title color="#777777" size="26">(.+?)<\/title>/g, "___")
+      .replace(/___+/, `<title color="#777777" size="26">${title}</title>`);
+
+    return forwardMsg;
+  }
+
+  /**
+   * 处理更新失败的相关函数
+   * @param {string} err
+   * @param {string} stdout
+   * @returns
+   */
+  async gitErr(err, stdout) {
+    let msg = "更新失败！";
+    let errMsg = err.toString();
+    stdout = stdout.toString();
+
+    if (errMsg.includes("Timed out")) {
+      let remote = errMsg.match(/'(.+?)'/g)[0].replace(/'/g, "");
+      await this.reply(msg + `\n连接超时：${remote}`);
+      return;
+    }
+
+    if (/Failed to connect|unable to access/g.test(errMsg)) {
+      let remote = errMsg.match(/'(.+?)'/g)[0].replace(/'/g, "");
+      await this.reply(msg + `\n连接失败：${remote}`);
+      return;
+    }
+
+    if (errMsg.includes("be overwritten by merge")) {
+      await this.reply(
+        msg +
+          `存在冲突：\n${errMsg}\n` +
+          "请解决冲突后再更新，或者执行#强制更新，放弃本地修改"
+      );
+      return;
+    }
+
+    if (stdout.includes("CONFLICT")) {
+      await this.reply([
+        msg + "存在冲突\n",
+        errMsg,
+        stdout,
+        "\n请解决冲突后再更新，或者执行#强制更新，放弃本地修改",
+      ]);
+      return;
+    }
+
+    await this.reply([errMsg, stdout]);
+  }
+
+  /**
+   * 异步执行git相关命令
+   * @param {string} cmd git命令
+   * @returns
+   */
+  async execSync(cmd) {
+    return new Promise((resolve, reject) => {
+      exec(cmd, { windowsHide: true }, (error, stdout, stderr) => {
+        resolve({ error, stdout, stderr });
+      });
+    });
+  }
+
+  /**
+   * 检查git是否安装
+   * @returns
+   */
+  async checkGit() {
+    let ret = await execSync("git --version", { encoding: "utf-8" });
+    if (!ret || !ret.includes("git version")) {
+      await this.reply("请先安装git");
+      return false;
+    }
+    return true;
+  }
 }

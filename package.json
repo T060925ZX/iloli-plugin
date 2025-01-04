@@ -1,14 +1,24 @@
 {
-    "name": "iloli-plugin",
-    "version": "1.0.0-beta",
-    "author": "@Jiaozi @向日葵",
-    "description": "Yunzai-Bot莉莉插件",
-    "main": "index.js",
-    "type": "module",
-    "scripts": {},
-    "dependencies": {
-      "puppeteer": "*",
-      "axios": "*"
-    }
-  }
-  
+  "name": "iloli-plugin",
+  "version": "1.0.0-beta",
+  "description": "Yunzai-Bot娱乐扩展",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/T060925ZX/iloli-plugin"
+  },
+  "keywords": [
+    "Yunzai-Bot",
+    "iloli-plugin"
+  ],
+  "author": "@jiaozi",
+  "dependencies": {
+    "axios": "*",
+    "cheerio": "1.0.0-rc.12"
+  },
+  "license": "MIT"
+}

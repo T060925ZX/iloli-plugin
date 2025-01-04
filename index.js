@@ -1,7 +1,27 @@
-import fs from 'node:fs';
-import path from 'node:path';
+import fs from "node:fs";
+import Cfg from "./model/Cfg.js";
+import chalk from 'chalk'
 
-const _path = process.cwd().replace(/\\/g, '/');
+if (!global.segment) {
+  try {
+    global.segment = (await import("oicq")).segment;
+  } catch (err) {
+    global.segment = (await import("icqq")).segment;
+  }
+}
+
+// 异步函数获取插件版本
+async function globalVersion() {
+  let PluginVersion = JSON.parse(fs.readFileSync(`${_path}/plugins/iloli-plugin/package.json`, 'utf-8'));
+  PluginVersion = PluginVersion.version; 
+  global.PluginVersion = PluginVersion;
+  return PluginVersion; 
+}
+
+// 异步执行获取版本操作
+(async () => {
+  const version = await globalVersion();
+})();
 
 // 检查并复制需要的配置文件
 const configDir = `${_path}/plugins/iloli-plugin/config`;
@@ -11,8 +31,6 @@ const requiredFiles = [
   'config.yaml',
   'help.yaml'
 ];
-
-logger.mark(`======0ε٩(๑> ₃ <)۶з ======`);
 
 // 检查 config 目录是否存在，不存在则复制文件
 if (!fs.existsSync(configDir)) {
@@ -31,20 +49,13 @@ if (!fs.existsSync(configDir)) {
   });
 }
 
-// 异步函数获取插件版本
-async function globalVersion() {
-  let PluginVersion = JSON.parse(fs.readFileSync(`${_path}/plugins/iloli-plugin/package.json`, 'utf-8'));
-  PluginVersion = PluginVersion.version; 
-  global.PluginVersion = PluginVersion;
-  return PluginVersion; 
-}
+logger.mark(`======0ε٩(๑> ₃ <)۶з ======`);
 
-// 异步执行获取版本操作
-(async () => {
-  const version = await globalVersion();
-})();
+const versionData = Cfg.getdefSet("version", "version");
 
-const files = fs.readdirSync(`${_path}/plugins/iloli-plugin/apps`).filter(file => file.endsWith('.js'));
+const files = fs
+  .readdirSync("./plugins/iloli-plugin/apps")
+  .filter((file) => file.endsWith(".js"));
 
 let ret = [];
 
