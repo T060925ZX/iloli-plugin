@@ -1,7 +1,19 @@
+![iloli-plugin](https://socialify.git.ci/T060925ZX/iloli-plugin/image?description=1&font=Raleway&forks=1&issues=1&language=1&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Auto)
 
-![](https://www.ghproxy.cn/https://raw.githubusercontent.com/T060925ZX/iloli-plugin/refs/heads/main/resources/img.webp)
+<img decoding="async" align=right src="resources/logo.webp" width="35%">
 
 # iloli-plugin
+
+- 一个适用于 [Yunzai 系列机器人框架](https://github.com/yhArcadia/Yunzai-Bot-plugins-index) 的鸣潮游戏数据查询插件
+
+- 支持手机验证码登录或 Token 登录，支持查询玩家、日常、数据坞、抽卡等游戏数据
+
+- **使用中遇到问题请加 QQ 群咨询：[1014823769](https://qm.qq.com/q/tkbstruiGI)**
+
+> [!TIP]
+> Jiaozi插件交流群 [983299064](https://qm.qq.com/q/ciLUvOjDyw) 
+>
+> 向日葵插件交流群 [1013495491](https://qm.qq.com/q/1zJVAwH5Ig) 
 
 ## 安装插件
 
@@ -52,12 +64,3 @@ pnpm install --filter=iloli-plugin
 | 名单 | 主要贡献 |
 |:----: |:----: |
 | [@Jiaozi](https://github.com/T060925ZX) | 新建文件夹（bushi |
-| [@向日葵](https://github.com/T060925ZX) | 共创 |
-
-
-> [!TIP]
-> iloli-plugin交流群 [1013495491](https://qm.qq.com/q/1zJVAwH5Ig) 
-> 
-> Jiaozi插件交流群 [983299064](https://qm.qq.com/q/ciLUvOjDyw) 
->
-> 向日葵插件交流群 [1013495491](https://qm.qq.com/q/1zJVAwH5Ig) 
