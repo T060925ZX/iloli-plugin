@@ -36,22 +36,12 @@ export class update extends plugin {
 
     this.versionData = Cfg.getdefSet("version", "version");
 
-    // 设置自动更新任务
-    this.setupAutoUpdate();
+    this.task = {
+      name: '[iloli-plugin]定时更新',
+      fnc: this.update,
+      cron: '0 0 9 * * *'
   }
 
-  /**
-   * 设置自动更新任务
-   */
-  setupAutoUpdate() {
-    cron.schedule("10 1 * * *", async () => {
-      console.log("开始执行自动更新任务...");
-      try {
-        await this.update();
-      } catch (error) {
-        console.error("自动更新失败：", error);
-      }
-    });
   }
 
   /**
@@ -59,23 +49,23 @@ export class update extends plugin {
    * @returns
    */
   async update() {
-    if (!this.e?.isMaster && !uping) return false;
+    if (!this.e.isMaster) return false;
 
-    // 检查是否正在更新中
+    /** 检查是否正在更新中 */
     if (uping) {
-      await this.reply?.("已有命令更新中..请勿重复操作");
+      await this.reply("已有命令更新中..请勿重复操作");
       return;
     }
 
-    // 检查 git 是否安装
+    /** 检查git安装 */
     if (!(await this.checkGit())) return;
 
-    const isForce = this.e?.msg?.includes("强制");
+    const isForce = this.e.msg.includes("强制");
 
-    // 执行更新
+    /** 执行更新 */
     await this.runUpdate(isForce);
 
-    // 是否需要重启
+    /** 是否需要重启 */
     if (this.isUp) {
       setTimeout(() => this.restart(), 2000);
     }
