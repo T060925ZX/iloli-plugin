@@ -40,6 +40,13 @@ class puppeteerRender {
 
         try {
             const page = await puppeteer.browser.newPage(); // 创建新页面
+                // 设置页面视窗大小为 1980x1080
+            await page.setViewport({
+                width: 1980,
+                height: 1080,
+                deviceScaleFactor: 2,
+            });
+
             let pageGotoParams = lodash.extend({ timeout: 120000 }, param.pageGotoParams || {});
             // 设置请求 Header
             if (header && (header.length !== 0)) {
