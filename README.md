@@ -55,10 +55,10 @@ pnpm install --filter=iloli-plugin
 ### 感谢那些默默付出的人
 ###### ***不分先后顺序***
 
-
-> [!TIP]
-> Jiaozi插件交流群 [983299064](https://qm.qq.com/q/ciLUvOjDyw) 
-
 | 名单 | 主要贡献 |
 |:----: |:----: |
 | [@Jiaozi](https://github.com/T060925ZX) | 新建文件夹（bushi |
+
+
+> [!TIP]
+> Jiaozi插件交流群 [983299064](https://qm.qq.com/q/ciLUvOjDyw) 
