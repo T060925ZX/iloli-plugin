@@ -26,30 +26,35 @@ async function globalVersion() {
   const version = await globalVersion();
 })();
 
-// 检查并复制需要的配置文件
-const configDir = `${_path}/plugins/iloli-plugin/config`;
-const defSetDir = `${_path}/plugins/iloli-plugin/defSet`;
+// 递归复制文件夹
+function copyFolderSync(source, target) {
+  if (!fs.existsSync(target)) {
+    fs.mkdirSync(target, { recursive: true }); // 确保目标文件夹存在
+  }
 
-const requiredFiles = [
-  'config.yaml',
-  'help.yaml'
-];
+  const items = fs.readdirSync(source); // 读取源文件夹内容
+  items.forEach(item => {
+    const sourcePath = path.join(source, item);
+    const targetPath = path.join(target, item);
 
-// 检查 config 目录是否存在，不存在则复制文件
-if (!fs.existsSync(configDir)) {
-  fs.mkdirSync(configDir, { recursive: true }); 
-  
-  requiredFiles.forEach(file => {
-    const sourceFile = path.join(defSetDir, file);
-    const targetFile = path.join(configDir, file);
-
-    if (fs.existsSync(sourceFile)) {
-      fs.copyFileSync(sourceFile, targetFile);
-      logger.mark(`初始化 ${file} 文件...`);
+    if (fs.statSync(sourcePath).isDirectory()) {
+      // 如果是子文件夹，递归复制
+      copyFolderSync(sourcePath, targetPath);
     } else {
-      logger.warn(`警告: 源文件 ${file} 不存在，无法复制`);
+      // 如果是文件，直接复制
+      fs.copyFileSync(sourcePath, targetPath);
     }
   });
+}
+
+// 检查 config 目录是否存在，不存在则复制整个文件夹
+if (!fs.existsSync(configDir)) {
+  try {
+    copyFolderSync(defSetDir, configDir);
+    logger.mark(`成功初始化配置文件夹: ${defSetDir} 到 ${configDir}`);
+  } catch (error) {
+    logger.error(`复制配置文件夹失败: ${error.message}`);
+  }
 }
 
 const versionData = Cfg.getdefSet("version", "version");
