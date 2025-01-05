@@ -26,8 +26,11 @@ async function globalVersion() {
   const version = await globalVersion();
 })();
 
-// 递归复制文件夹
-function copyFolderSync(source, target) {
+const configDir = `${_path}/plugins/iloli-plugin/config`;
+const defSetDir = `${_path}/plugins/iloli-plugin/defSet`;
+
+// 复制文件并按指定的命名规则保存
+function copyFilesWithCustomNaming(source, target) {
   if (!fs.existsSync(target)) {
     fs.mkdirSync(target, { recursive: true }); // 确保目标文件夹存在
   }
@@ -35,14 +38,15 @@ function copyFolderSync(source, target) {
   const items = fs.readdirSync(source); // 读取源文件夹内容
   items.forEach(item => {
     const sourcePath = path.join(source, item);
-    const targetPath = path.join(target, item);
+    const targetPath = path.join(target, `${item.split('/').join('.')}`); // 按照文件夹名.文件名的方式保存
 
     if (fs.statSync(sourcePath).isDirectory()) {
       // 如果是子文件夹，递归复制
-      copyFolderSync(sourcePath, targetPath);
+      copyFilesWithCustomNaming(sourcePath, target);
     } else {
-      // 如果是文件，直接复制
-      fs.copyFileSync(sourcePath, targetPath);
+      // 如果是文件，按新的命名规则复制
+      const customTargetPath = path.join(target, `${path.basename(source)}.${item}`);
+      fs.copyFileSync(sourcePath, customTargetPath);
     }
   });
 }
@@ -50,10 +54,10 @@ function copyFolderSync(source, target) {
 // 检查 config 目录是否存在，不存在则复制整个文件夹
 if (!fs.existsSync(configDir)) {
   try {
-    copyFolderSync(defSetDir, configDir);
-    logger.mark(`成功初始化配置文件夹: ${defSetDir} 到 ${configDir}`);
+    copyFilesWithCustomNaming(defSetDir, configDir);
+    logger.mark(`[iloli-plugin]初始化配置文件`);
   } catch (error) {
-    logger.error(`复制配置文件夹失败: ${error.message}`);
+    logger.error(`初始化配置文件失败: ${error.message}`);
   }
 }
 
