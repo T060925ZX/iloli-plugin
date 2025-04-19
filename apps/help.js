@@ -314,7 +314,7 @@ const preRenderHelp = async () => {
 
   // 设置视口大小
   await page.setViewport({
-    width: 788,
+    width: 988,
     height: 520,
     deviceScaleFactor: deviceScaleFactor
   });
