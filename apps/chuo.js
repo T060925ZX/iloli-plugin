@@ -21,20 +21,20 @@ export class chuo extends plugin {
 
         // 配置合并
         this.prob = {
-            text: this.systemCfg.probabilities?.text || 0.6,
-            img: this.systemCfg.probabilities?.img || 0.1,
-            voice: this.systemCfg.probabilities?.voice || 0,
-            mute: this.systemCfg.probabilities?.mute || 0.05,
-            video: this.systemCfg.probabilities?.video || 0.15
+            text: this.systemCfg.probabilities?.text,
+            img: this.systemCfg.probabilities?.img,
+            voice: this.systemCfg.probabilities?.voice,
+            mute: this.systemCfg.probabilities?.mute,
+            video: this.systemCfg.probabilities?.video
         };
 
         this.settings = {
-            master: this.systemCfg.settings?.master || "主人",
-            mutetime: this.systemCfg.settings?.mutetime || 1,
-            speakerapi: this.systemCfg.settings?.speakerapi || "纳西妲",
-            emoji_api: this.systemCfg.settings?.emoji_api || "https://api.lolimi.cn/API/chaiq/c.php",
-            video_api: this.systemCfg.settings?.video_api || "https://api.yujn.cn/api/nvda.php?type=video",
-            tts_api: this.systemCfg.settings?.tts_api || "http://frp-fit.top:42444/tts"
+            master: this.systemCfg.settings?.master",
+            mutetime: this.systemCfg.settings?.mutetime,
+            speakerapi: this.systemCfg.settings?.speakerapi",
+            emoji_api: this.systemCfg.settings?.emoji_api",
+            video_api: this.systemCfg.settings?.video_api",
+            tts_api: this.systemCfg.settings?.tts_api"
         };
 
         this.replies = {
