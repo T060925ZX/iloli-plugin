@@ -37,7 +37,7 @@ export function supportGuoba() {
     pluginInfo: {
       name: 'iloli-plugin',
       title: '萝莉插件',
-      description: '多功能插件集合，包含多种AI接口和趣味功能',
+      description: '桀桀桀...小萝莉往哪跑...',
       author: '插件作者',
       authorLink: '作者链接(如果有)',
       link: '插件链接(如果有)',
