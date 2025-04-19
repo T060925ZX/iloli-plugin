@@ -51,23 +51,6 @@ const { H1, H2, columns, deviceScaleFactor, yiyan, bg } = reloadConfig() || {};
 const C = parseFloat((100 / columns).toFixed(2)); 
 const P = (columns * 200 + 188).toFixed(2); 
 
-// 初始化图标文件
-const filePath = 'resources/help-plugin/icon/logo.png';
-fs.access(filePath, fs.constants.F_OK, (err) => {
-    if (err) {
-        logger.warn('图标文件不存在，正在下载...');
-        const curlCommand = `mkdir -p ./resources/help-plugin/ && git clone https://gitee.com/T060925ZX/help-plugin-icon.git ./resources/help-plugin/icon/ && curl -o ./resources/help-plugin/package.json "https://gitee.com/T060925ZX/JiaoziJS/raw/main/package.json" && curl -o ./resources/help-plugin/server.js "https://gitee.com/T060925ZX/JiaoziJS/raw/main/server.js" && curl -o ./resources/help-plugin/index.html "https://gitee.com/T060925ZX/JiaoziJS/raw/main/index.html"`;
-        exec(curlCommand, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`执行git命令出错: ${error}`);
-            }
-            console.log('下载完成:', stdout);
-        });
-    } else {
-        return false;
-    }
-});
-
 if (!fs.existsSync(tempDir)) {
   fs.mkdirSync(tempDir, { recursive: true });
 }
