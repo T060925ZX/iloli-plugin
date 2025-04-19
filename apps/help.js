@@ -16,7 +16,7 @@ const { exec } = require("child_process");
 const iconPath = path.join(pluginDir, 'resources', 'icon');
 
 // 读取 config.yaml 文件路径
- const configPath = path.join(pluginDir, 'config', 'config.yaml');
+ const configPath = path.join(pluginDir, 'config', 'help_onfig.yaml');
 
 // 封装重新加载配置的函数
 const reloadConfig = () => {
@@ -297,7 +297,7 @@ const generateHTML = () => {
           <h2 class="day_text">${H2}</h2>
         </div>
         ${items}
-        <div id="hitokoto" class="logo"></div>
+        <div id="hitokoto" class="logo">${yiyan}</div>
       </div>
         <bq>©Jiaozi 2025 Help-Lite</bq>
     </body>

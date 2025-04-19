@@ -467,11 +467,6 @@ export function supportGuoba() {
               { label: 'moonshot', value: 'moonshot' }
             ]
           }
-        },
-        {
-          field: 'deviceScaleFactor',
-          label: '设备缩放因子',
-          component: 'InputNumber'
         }
       ],
       getConfigData() {
