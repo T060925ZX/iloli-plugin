@@ -44,7 +44,7 @@ export function supportGuoba() {
       isV3: true,
       isV2: false,
       showInMenu: true,
-      icon: 'mdi:robot-happy-outline',
+      icon: 'mdi:alpha-i-box-outline',
       iconColor: '#ff9ff3',
     },
     configInfo: {
