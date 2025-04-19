@@ -17,14 +17,14 @@
     git clone https://github.com/T060925ZX/iloli-plugin.git ./plugins/iloli-plugin
 
 > [!NOTE]
-> 如果你的网络环境较差，无法连接到 Github，可以使用 [GitHub Proxy](https://ghproxy.link/) 提供的文件代理加速下载服务
+> 如果你的网络环境较差，无法连接到 Github，可以使用 [GitHub Proxy](https://github.akams.cn/) 提供的文件代理加速下载服务
 >
 > ```
-> git clone https://ghgo.xyz/https://github.com/T060925ZX/iloli-plugin.git ./plugins/iloli-plugin
+> git clone https://gitproxy.click/https://github.com/T060925ZX/iloli-plugin.git ./plugins/iloli-plugin
 > ```
 > Gitee源（更新较慢）：
 > ```
-> git clone https://gitee.com/tu-zhengxiong0925/iloli-plugin ./plugins/iloli-plugin
+> git clone https://gitee.com/T060925ZX/iloli-plugin.git ./plugins/iloli-plugin
 > ```
 
 #### 2. 安装依赖
