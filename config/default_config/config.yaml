@@ -55,6 +55,11 @@ onebot_emoji_fixedEmojiId: 66
 
 # 系统配置
 deviceScaleFactor: 1
+main_title: iloli-plugin
+sub_title: 帮助详情
+columns: 3
+default_hitokoto: 种自己的花，爱自己的宇宙
+background_image_url: none
 
 # 人生模拟器模型选择 (deepseek/moonshot/qwen)
 ai_life_model: deepseek
