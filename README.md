@@ -66,6 +66,5 @@ pnpm install --filter=iloli-plugin
 |:----: |:----: |
 | [@Jiaozi](https://github.com/T060925ZX) | 新建文件夹（bushi |
 
-
 > [!TIP]
 > Jiaozi插件交流群 [983299064](https://qm.qq.com/q/ciLUvOjDyw) 
