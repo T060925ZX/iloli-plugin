@@ -11,7 +11,7 @@ export class RandomAbility extends plugin {
             priority: 5000,
             rule: [
                 {
-                    reg: "^#?今日?(超能力|随机超能力)$",
+                    reg: "^#?(今日|随机)超能力$",
                     fnc: 'getAbility'
                 },
                 {

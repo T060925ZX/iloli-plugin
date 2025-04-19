@@ -42,21 +42,14 @@ export function supportGuoba() {
         // ============ 基础开关 ============
         {
           component: 'Divider',
-          label: '基础开关',
+          label: '戳一戳设置',
           componentProps: { orientation: 'left', plain: true }
         },
         {
           field: 'chuo',
-          label: '戳一戳功能总开关',
+          label: '戳一戳开关',
           component: 'Switch',
           componentProps: { activeText: '启用', inactiveText: '禁用' }
-        },
-
-        // ============ 概率设置 ============
-        {
-          component: 'Divider',
-          label: '回复概率设置',
-          componentProps: { orientation: 'left', plain: true }
         },
         {
           field: 'probabilities.text',
@@ -69,33 +62,30 @@ export function supportGuoba() {
           field: 'probabilities.img',
           label: '图片回复概率',
           component: 'InputNumber',
-          componentProps: { min: 0, max: 1, step: 0.01, precision: 2 }
+          componentProps: { min: 0, max: 1, step: 0.01, precision: 2 },
+          helpMessage: '0-1之间的小数，例如0.6表示60%概率'
         },
         {
           field: 'probabilities.voice',
           label: '语音回复概率',
           component: 'InputNumber',
-          componentProps: { min: 0, max: 1, step: 0.01, precision: 2 }
+          componentProps: { min: 0, max: 1, step: 0.01, precision: 2 },
+          helpMessage: '0-1之间的小数，例如0.6表示60%概率'
         },
         {
           field: 'probabilities.mute',
           label: '禁言概率',
           component: 'InputNumber',
-          componentProps: { min: 0, max: 1, step: 0.01, precision: 2 }
+          componentProps: { min: 0, max: 1, step: 0.01, precision: 2 },
+          helpMessage: '0-1之间的小数，例如0.6表示60%概率'
         },
         {
           field: 'probabilities.video',
           label: '视频回复概率',
           component: 'InputNumber',
           componentProps: { min: 0, max: 1, step: 0.01, precision: 2 },
+          helpMessage: '0-1之间的小数，例如0.6表示60%概率',
           bottomHelpMessage: '所有概率总和建议不超过1'
-        },
-
-        // ============ 基础设置 ============
-        {
-          component: 'Divider',
-          label: '基础参数设置',
-          componentProps: { orientation: 'left', plain: true }
         },
         {
           field: 'settings.master',
@@ -203,7 +193,7 @@ export function supportGuoba() {
 
         {
           component: 'Divider',
-          label: '通义千问设置',
+          label: '通义千问 AI 设置',
           componentProps: { orientation: 'left', plain: true }
         },
         {
