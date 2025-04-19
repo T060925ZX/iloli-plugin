@@ -42,7 +42,6 @@ emoji_random: 100
 emoji_sleepTime: 100
 emoji_all: true
 
-
 # NTQQ表情回应配置
 onebot_emoji_enable: false 
 onebot_emoji_whiteUserList: []
@@ -54,6 +53,8 @@ onebot_emoji_sleepTime: 100
 onebot_emoji_all: true 
 onebot_emoji_fixedEmojiId: 66  
 
-
 # 系统配置
 deviceScaleFactor: 1
+
+# 人生模拟器模型选择 (deepseek/moonshot/qwen)
+ai_life_model: deepseek

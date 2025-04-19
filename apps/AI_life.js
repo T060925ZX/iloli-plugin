@@ -14,7 +14,7 @@ export class AILifeSimulator extends plugin {
     constructor() {
         super({
             name: 'AI人生模拟器',
-            dsc: '基于DeepSeek的人生模拟',
+            dsc: '基于AI的人生模拟',
             event: 'message',
             priority: 100,
             rule: [
@@ -41,15 +41,6 @@ export class AILifeSimulator extends plugin {
             ]
         });
 
-        this.apiUrl = "https://api.deepseek.com/v1/chat/completions";
-        this.stages = [
-            { name: "童年", ageRange: "0-12岁" },
-            { name: "青少年", ageRange: "13-18岁" },
-            { name: "成年早期", ageRange: "19-30岁" },
-            { name: "中年", ageRange: "31-50岁" },
-            { name: "老年", ageRange: "51+" }
-        ];
-        
         // 初始化目录
         if (!fs.existsSync(SAVE_DIR)) {
             fs.mkdirSync(SAVE_DIR, { recursive: true });
@@ -57,11 +48,39 @@ export class AILifeSimulator extends plugin {
         
         // 获取配置
         this.config = Cfg.getConfig('config');
-        this.apiKey = this.config?.deepseek_sk;
         
-        if (!this.apiKey) {
-            logger.error('未配置DeepSeek API密钥！请在config.yaml中添加deepseek_sk项');
+        // 模型配置
+        this.modelType = this.config?.ai_life_model || "deepseek";
+        
+        // 设置API参数
+        switch (this.modelType) {
+            case "moonshot":
+                this.apiUrl = this.config?.moonshot_url;
+                this.apiKey = this.config?.moonshot_sk;
+                this.modelName = this.config?.moonshot_model;
+                break;
+            case "qwen":
+                this.apiUrl = this.config?.qwen_base_url;
+                this.apiKey = this.config?.qwen_api_key;
+                this.modelName = this.config?.qwen_model;
+                break;
+            default: // deepseek
+                this.apiUrl = this.config?.deepseek_url;
+                this.apiKey = this.config?.deepseek_sk;
+                this.modelName = this.config?.deepseek_model;
         }
+
+        if (!this.apiKey) {
+            logger.error(`未配置${this.modelType} API密钥！`);
+        }
+
+        this.stages = [
+            { name: "童年", ageRange: "0-12岁" },
+            { name: "青少年", ageRange: "13-18岁" },
+            { name: "成年早期", ageRange: "19-30岁" },
+            { name: "中年", ageRange: "31-50岁" },
+            { name: "老年", ageRange: "51+" }
+        ];
     }
 
     // ============ 核心功能 ============
@@ -69,7 +88,7 @@ export class AILifeSimulator extends plugin {
         const savePath = this.getSavePath(e.user_id);
         
         if (fs.existsSync(savePath)) {
-            await e.reply('⚠️ 你已有正在进行的人生，使用 #我的AI人生 查看');
+            await e.reply('⚠️ 你已有正在进行的人生，使用 #我的人生 查看');
             return true;
         }
 
@@ -81,7 +100,7 @@ export class AILifeSimulator extends plugin {
         try {
             const prompt = `生成以下JSON数据：
 {
-  "background": "随机出生背景，可以是任何家庭背景(50字)",
+  "background": "随机出生背景(50字)",
   "traits": ["特质1", "特质2", "特质3"],
   "challenges": ["挑战1", "挑战2"]
 }`;
@@ -109,7 +128,7 @@ export class AILifeSimulator extends plugin {
             this.saveData(savePath, lifeData);
             
             await e.reply([
-                '🎉 人生已启动！注意token消耗',
+                '🎉 人生已启动！',
                 '——————————',
                 `📜 背景: ${background}`,
                 `✨ 特质: ${traits.join('、')}`,
@@ -129,7 +148,7 @@ export class AILifeSimulator extends plugin {
         const savePath = this.getSavePath(e.user_id);
         
         if (!fs.existsSync(savePath)) {
-            await e.reply('⚠️ 请先 #AI人生 开始');
+            await e.reply('⚠️ 请先 #模拟人生 开始');
             return true;
         }
 
@@ -185,31 +204,45 @@ export class AILifeSimulator extends plugin {
         return true;
     }
 
-    // ================= 工具方法 =================
+    // ============ API调用 ============
     async callAPI(prompt, retry = 3) {
         if (!this.apiKey) throw new Error('API密钥未配置');
 
         for (let i = 0; i < retry; i++) {
             try {
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.apiKey}`
+                };
+
+                // Qwen特殊处理
+                if (this.modelType === "qwen") {
+                    headers['X-DashScope-SSE'] = 'enable';
+                }
+
+                const body = {
+                    model: this.modelName,
+                    messages: [
+                        {
+                            role: "system",
+                            content: "你是一个人生模拟器，必须返回严格JSON格式的数据,背景可好可坏，结局可好可坏"
+                        },
+                        { role: "user", content: prompt }
+                    ],
+                    temperature: 0.7,
+                    response_format: { type: "json_object" }
+                };
+
+                // Qwen请求体特殊格式
+                if (this.modelType === "qwen") {
+                    body.input = { messages: body.messages };
+                    delete body.messages;
+                }
+
                 const response = await fetch(this.apiUrl, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.apiKey}`
-                    },
-                    body: JSON.stringify({
-                        model: "deepseek-chat",
-                        messages: [
-                            {
-                                role: "system",
-                                content: "你是一个人生模拟器，必须返回严格JSON格式的数据"
-                            },
-                            { role: "user", content: prompt }
-                        ],
-                        temperature: 0.7,
-                        max_tokens: 2000,
-                        response_format: { type: "json_object" }
-                    }),
+                    headers,
+                    body: JSON.stringify(body),
                     timeout: 30000
                 });
 
@@ -219,7 +252,7 @@ export class AILifeSimulator extends plugin {
                 }
 
                 const data = await response.json();
-                return data.choices[0].message.content;
+                return this.modelType === "qwen" ? data.output.text : data.choices[0].message.content;
 
             } catch (err) {
                 if (i === retry - 1) throw err;
@@ -228,6 +261,7 @@ export class AILifeSimulator extends plugin {
         }
     }
 
+    // ============ 工具方法 ============
     parseJSON(jsonStr) {
         try {
             const data = JSON.parse(jsonStr);
@@ -258,7 +292,6 @@ export class AILifeSimulator extends plugin {
 - 上一阶段: ${lifeData.memories.slice(-1)[0]?.events.join('; ') || '无'}`;
     }
 
-    // ============= 辅助方法 =============
     getSavePath(uid) {
         return path.join(SAVE_DIR, `${uid}.json`);
     }
@@ -297,7 +330,7 @@ export class AILifeSimulator extends plugin {
         return '系统繁忙';
     }
 
-    // ============= 其他命令 =============
+    // ============ 其他命令 ============
     async showLife(e) {
         try {
             const data = this.loadData(this.getSavePath(e.user_id));
@@ -333,10 +366,12 @@ export class AILifeSimulator extends plugin {
         await e.reply([
             '📚 使用帮助',
             '——————————',
-            '#模拟人生     - 开始新人生',
-            '#下一阶段   - 推进人生',
+            '#模拟人生 - 开始新人生',
+            '#下一阶段 - 推进人生',
             '#我的人生 - 查看状态',
             '#重开人生 - 重置人生',
+            '——————————',
+            `当前模型: ${this.modelType}`,
             '——————————',
             '人生阶段:',
             ...this.stages.map(s => `· ${s.name} (${s.ageRange})`)

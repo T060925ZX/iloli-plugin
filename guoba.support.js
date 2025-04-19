@@ -456,6 +456,19 @@ export function supportGuoba() {
           }
         },
         {
+          field: 'ai_life_model',
+          label: '模拟人生模型',
+          helpMessage: '模拟人生使用的模型',
+          component: 'Select',
+          componentProps: {
+            options: [
+              { label: 'deepseek', value: 'deepseek' },
+              { label: 'qwen', value: 'qwen' },
+              { label: 'moonshot', value: 'moonshot' }
+            ]
+          }
+        },
+        {
           field: 'deviceScaleFactor',
           label: '设备缩放因子',
           component: 'InputNumber'
