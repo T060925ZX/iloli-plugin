@@ -12,7 +12,7 @@ export class example2 extends plugin {
             rule: [
 
                 {
-                    reg: '^(#|/)?(云崽|云宝|全部)?(帮助|菜单|help|功能|说明|指令|使用说明|命令)(列表)?$',
+                    reg: '^(#|/)?(云崽|云宝|全部)?(i|iloli|萝莉)(帮助|菜单|help|功能|说明|指令|使用说明|命令)(列表)?$',
                     fnc: 'help'
                 }
             ]
@@ -35,5 +35,5 @@ export class example2 extends plugin {
     async help(e) {
         await this.sendHelpImage(e, 'help');
     }
-    
+
 }

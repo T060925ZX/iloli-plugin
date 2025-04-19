@@ -1,5 +1,7 @@
 import puppeteer from "../../../lib/puppeteer/puppeteer.js"
 import cfg from '../../../lib/config/config.js'
+import Cfg from '../model/Cfg.js';
+
 /**
  * 浏览器截图
  * @param {*} e E
