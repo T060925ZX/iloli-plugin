@@ -10,12 +10,9 @@ function getVersion() {
   try {
     const pkgPath = path.join(__dirname, 'package.json')
     const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'))
-    // 新增：全局声明版本号
-    global.HelpPluginVersion = pkg.version || '0.0.0'
     return pkg.version || '0.0.0'
   } catch (err) {
     logger.error('[iloli插件] 读取版本号失败:', err)
-    global.HelpPluginVersion = '0.0.0'
     return '0.0.0'
   }
 }
@@ -135,7 +132,7 @@ function printBanner(version, config, modules) {
 
 // 主初始化函数
 async function initialize() {
-  const version = getVersion() // 这里已经包含了全局版本声明
+  const version = getVersion()
   const config = initConfig()
   const modules = await loadApps()
   
