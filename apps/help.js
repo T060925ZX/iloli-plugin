@@ -1,7 +1,7 @@
 import { createRequire } from "module";
 import { createHash } from 'crypto';
 import puppeteer from 'puppeteer';
-import yaml from 'yaml';
+import yaml from 'js-yaml';
 import path from 'path';
 import fs from 'fs';
 import Cfg from '../model/Cfg.js';
