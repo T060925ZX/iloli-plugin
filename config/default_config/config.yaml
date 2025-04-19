@@ -1,0 +1,38 @@
+chuo: true
+
+# ============ 概率设置 ============
+probabilities:
+  text: 0.6    # 文字回复概率 (60%)
+  img: 0.1     # 图片回复概率 (10%)
+  voice: 0.0   # 语音回复概率 (默认关闭)
+  mute: 0.05   # 禁言概率 (5%)
+  video: 0.15  # 视频回复概率 (15%)
+  # 剩余概率将触发反击 (10%)
+# ============ 基础设置 ============
+settings:
+  master: "主人"          # 主人称呼显示
+  mutetime: 1            # 基础禁言时间(分钟)，0=自动递增
+  speakerapi: "纳西妲"    # 语音合成角色
+  emoji_api: "https://api.lolimi.cn/API/chaiq/c.php"      # 表情包API
+  video_api: "https://api.yujn.cn/api/nvda.php?type=video" # 视频API
+  tts_api: "http://1.14.51.4:19191/tts"                # 语音合成API
+  redis_prefix: "Yz:pokecount:"                          # Redis计数前缀
+
+moonshot_sk: "" 
+# 模型自行参考官方文档
+moonshot_model: "moonshot-v1-8k" 
+moonshot_url: "https://api.moonshot.cn/v1/chat/completions" 
+
+deepseek_sk: "" 
+# 模型可选：deepseek-chat / deepseek-coder
+deepseek_model: "deepseek-chat" 
+deepseek_url: "https://api.deepseek.com/v1/chat/completions" 
+
+qwen_api_key: ""  
+# 模型可选: qwen-turbo/qwen-plus/qwen-max
+qwen_model: "qwen-max" 
+qwen_base_url: "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation" 
+# 是否启用联网搜索功能
+qwen_enable_search: false 
+
+deviceScaleFactor: 1

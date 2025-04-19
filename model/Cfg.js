@@ -1,110 +1,74 @@
-import YAML from "yaml";
-import fs from "node:fs";
-import chokidar from "chokidar";
-import lodash from "lodash";
-import { promisify } from 'node:util';
+import yaml from 'yaml';
+import fs from 'node:fs';
+import path from 'node:path';
+import _ from 'lodash';
 
-/** 配置文件 直接借鉴yunzai配置代码 */
-class XsCfg {
-  constructor() {
-    /** 默认设置 */
-    this.defSetPath = "./plugins/iloli-plugin/defSet/";
-    this.defSet = {};
+const _path = process.cwd().replace(/\\/g, '/');
 
-    /** 用户设置 */
-    this.configPath = "./plugins/iloli-plugin/config/";
-    this.config = {};
-
-    /** 监听文件 */
-    this.watcher = { config: {}, defSet: {} };
+class Cfg {
+  constructor(pluginName = 'iloli-plugin') {
+    this.pluginPath = `${_path}/plugins/${pluginName}`;
+    this.userConfigDir = `${this.pluginPath}/config`;
+    this.defaultConfigDir = `${this.pluginPath}/config/default_config`;
   }
 
-  /**
-   * @param app  功能
-   * @param name 配置文件名称
-   */
-  getdefSet(app, name) {
-    return this.getYaml(app, name, "defSet");
+  /** 获取用户配置（自动合并默认配置） */
+  getConfig(name, parseYaml = true) {
+    const userConfig = this._getUserConfig(name, parseYaml);
+    const defaultConfig = this._getDefaultConfig(name, true);
+    
+    // 合并配置（用户配置优先）
+    return _.merge({}, defaultConfig, userConfig);
   }
 
-  /** 用户配置 */
-  getConfig(app, name) {
-    let ignore = [];
-
-    if (ignore.includes(`${app}.${name}`)) {
-      return this.getYaml(app, name, "config");
-    }
-
-    return {
-      ...this.getdefSet(app, name),
-      ...this.getYaml(app, name, "config"),
-    };
+  /** 获取原始用户配置 */
+  _getUserConfig(name, parseYaml = true) {
+    const configPath = `${this.userConfigDir}/${name}.yaml`;
+    return this._loadConfig(configPath, parseYaml);
   }
 
-  /**
-   * 获取配置yaml
-   * @param app 功能
-   * @param name 名称
-   * @param type 默认跑配置-defSet，用户配置-config
-   */
-  getYaml(app, name, type) {
-    let file = this.getFilePath(app, name, type);
-    let key = `${app}.${name}`;
-
-    if (this[type][key]) return this[type][key];
-
-    this[type][key] = YAML.parse(fs.readFileSync(file, "utf8"));
-
-    this.watch(file, app, name, type);
-
-    return this[type][key];
+  /** 获取默认配置 */
+  _getDefaultConfig(name, parseYaml = true) {
+    const configPath = `${this.defaultConfigDir}/${name}.yaml`;
+    return this._loadConfig(configPath, parseYaml);
   }
 
-  getFilePath(app, name, type) {
-    if (type == "defSet") return `${this.defSetPath}${app}/${name}.yaml`;
-    else return `${this.configPath}${app}.${name}.yaml`;
-  }
-
-  /** 监听配置文件 */
-  watch(file, app, name, type = "defSet") {
-    let key = `${app}.${name}`;
-
-    if (this.watcher[type][key]) return;
-
-    const watcher = chokidar.watch(file);
-    watcher.on("change", (path) => {
-      delete this[type][key];
-      logger.mark(`[修改配置文件][${type}][${app}][${name}]`);
-      if (this[`change_${app}${name}`]) {
-        this[`change_${app}${name}`]();
-      }
-    });
-
-    this.watcher[type][key] = watcher;
-  }
-
-  saveSet(app, name, type, data) {
-    let file = this.getFilePath(app, name, type);
-    if (lodash.isEmpty(data)) {
-      fs.existsSync(file) && fs.unlinkSync(file);
-    } else {
-      let yaml = YAML.stringify(data);
-      fs.writeFileSync(file, yaml, "utf8");
+  /** 加载配置文件 */
+  _loadConfig(path, parseYaml = true) {
+    if (!fs.existsSync(path)) return {};
+    
+    try {
+      const content = fs.readFileSync(path, 'utf8');
+      return parseYaml ? yaml.parse(content) || {} : content;
+    } catch (err) {
+      console.error(`[Config] 加载配置失败 ${path}:`, err);
+      return {};
     }
   }
 
-  /**获取Yunzai分支名*/
-  async getYunzaiName() {
-    let yunzaiName = null;
-    const readFileAsync = promisify(fs.readFile);
-    if (!yunzaiName) {
-      yunzaiName = await readFileAsync('./package.json')
-        .then(data => JSON.parse(data))
-        .then(pmcfg => pmcfg?.name || 'Yunzai-Bot')
-        .catch(() => 'Yunzai-Bot');
+  /** 设置用户配置 */
+  setConfig(name, data, asYaml = true) {
+    const configPath = `${this.userConfigDir}/${name}.yaml`;
+    
+    // 确保目录存在
+    if (!fs.existsSync(this.userConfigDir)) {
+      fs.mkdirSync(this.userConfigDir, { recursive: true });
     }
-    return yunzaiName;
+
+    try {
+      const content = asYaml ? yaml.stringify(data) : data;
+      fs.writeFileSync(configPath, content, 'utf8');
+      return true;
+    } catch (err) {
+      console.error(`[Config] 保存配置失败 ${name}:`, err);
+      return false;
+    }
+  }
+
+  /** 检查默认配置是否存在 */
+  hasDefaultConfig(name) {
+    return fs.existsSync(`${this.defaultConfigDir}/${name}.yaml`);
   }
 }
 
-export default new XsCfg();
+export default new Cfg();
