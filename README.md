@@ -37,8 +37,15 @@ pnpm install --filter=iloli-plugin
 
 请使用 `#i帮助` 获取完整帮助
 
-- [x] 自动更新
+### 以实现功能
 
+- [x] 适配锅巴
+- [x] 表情回复
+- [x] 通义/kimi/deepseek AI对话
+- [x] 戳一戳
+- [x] 人生模拟器
+- [x] 获取某某人的QQ主页详细信息
+- [x] 随机超能力
 
 <div align="left"> 
   
