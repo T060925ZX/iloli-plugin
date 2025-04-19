@@ -1,6 +1,6 @@
 import plugin from "../../../lib/plugins/plugin.js";
 import image from "../model/image.js";
-import Cfg from '../model/Cfg.js';
+import Cfg from '../model/xCfg.js';
 
 export class example2 extends plugin {
     constructor() {
