@@ -16,43 +16,46 @@ export class chuo extends plugin {
         });
 
         // 加载配置
-        this.systemCfg = Cfg.getConfig('config');
+        this.config = Cfg.getConfig('config');
         this.chuoCfg = Cfg.getConfig('chuo');
 
-        // 配置合并
+        // 初始化配置
+        this.initConfig();
+    }
+
+    initConfig() {
+        // 主开关
+        this.enabled = this.config.chuo !== false;
+
+        // 概率配置
         this.prob = {
-            text: this.systemCfg.probabilities?.text,
-            img: this.systemCfg.probabilities?.img,
-            voice: this.systemCfg.probabilities?.voice,
-            mute: this.systemCfg.probabilities?.mute,
-            video: this.systemCfg.probabilities?.video
+            text: this.config.probabilities_text || 0.6,
+            img: this.config.probabilities_img || 0.1,
+            voice: this.config.probabilities_voice || 0,
+            mute: this.config.probabilities_mute || 0.05,
+            video: this.config.probabilities_video || 0.15
         };
 
+        // 设置配置
         this.settings = {
-            master: this.systemCfg.settings?.master",
-            mutetime: this.systemCfg.settings?.mutetime,
-            speakerapi: this.systemCfg.settings?.speakerapi",
-            emoji_api: this.systemCfg.settings?.emoji_api",
-            video_api: this.systemCfg.settings?.video_api",
-            tts_api: this.systemCfg.settings?.tts_api"
+            master: this.config.settings_master || "主人",
+            mutetime: Number(this.config.settings_mutetime) || 1,
+            speakerapi: this.config.settings_speakerapi || "纳西妲",
+            emoji_api: this.config.settings_emoji_api || "https://api.lolimi.cn/API/chaiq/c.php",
+            video_api: this.config.settings_video_api || "https://api.yujn.cn/api/nvda.php?type=video",
+            tts_api: this.config.settings_tts_api || "http://1.14.51.4:19191/tts",
+            redis_prefix: this.config.settings_redis_prefix || "Yz:pokecount:"
         };
 
+        // 回复内容
         this.replies = {
-            text: this.chuoCfg.replies?.text || [],
+            text: this.chuoCfg.replies?.text || ["被戳晕了……轻一点啦！", "救命啊，有变态>_<！！！"],
             voice: this.chuoCfg.replies?.voice || [],
             counter: this.chuoCfg.replies?.counter || []
         };
-
-        // 默认回复兜底
-        if (this.replies.text.length === 0) {
-            this.replies.text = ["被戳晕了……轻一点啦！", "救命啊，有变态>_<！！！"];
-        }
     }
 
     async chuoyichuo(e) {
-        // 将enabled初始化移到async函数内
-        this.enabled = this.systemCfg.chuo !== false; // 默认true
-        
         if (!this.enabled) return;
 
         const replyActions = {
@@ -100,9 +103,9 @@ export class chuo extends plugin {
         }
 
         if (e.target_id === e.self_id) {
-            const count = await this.getCount('Yz:pokecount:', e.group_id);
+            const count = await this.getCount(this.settings.redis_prefix, e.group_id);
             const usercount = this.settings.mutetime === 0 ? 
-                await this.getCount(`Yz:pokecount${e.operator_id}:`) : 
+                await this.getCount(`${this.settings.redis_prefix}${e.operator_id}:`) : 
                 0;
 
             // 防刷提示

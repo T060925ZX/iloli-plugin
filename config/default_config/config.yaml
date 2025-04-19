@@ -1,38 +1,58 @@
+# 戳一戳配置
 chuo: true
 
-# ============ 概率设置 ============
-probabilities:
-  text: 0.6    # 文字回复概率 (60%)
-  img: 0.1     # 图片回复概率 (10%)
-  voice: 0.0   # 语音回复概率 (默认关闭)
-  mute: 0.05   # 禁言概率 (5%)
-  video: 0.15  # 视频回复概率 (15%)
-  # 剩余概率将触发反击 (10%)
-# ============ 基础设置 ============
-settings:
-  master: "主人"          # 主人称呼显示
-  mutetime: 1            # 基础禁言时间(分钟)，0=自动递增
-  speakerapi: "纳西妲"    # 语音合成角色
-  emoji_api: "https://api.lolimi.cn/API/chaiq/c.php"      # 表情包API
-  video_api: "https://api.yujn.cn/api/nvda.php?type=video" # 视频API
-  tts_api: "http://1.14.51.4:19191/tts"                # 语音合成API
-  redis_prefix: "Yz:pokecount:"                          # Redis计数前缀
+probabilities_text: 0.6
+probabilities_img: 0.1
+probabilities_voice: 0
+probabilities_mute: 0.05
+probabilities_video: 0.15
 
-moonshot_sk: "" 
-# 模型自行参考官方文档
-moonshot_model: "moonshot-v1-8k" 
-moonshot_url: "https://api.moonshot.cn/v1/chat/completions" 
+settings_master: 主人
+settings_mutetime: 1
+settings_speakerapi: 纳西妲
+settings_emoji_api: https://api.lolimi.cn/API/chaiq/c.php
+settings_video_api: https://api.yujn.cn/api/nvda.php?type=video
+settings_tts_api: http://1.14.51.4:19191/tts
+settings_redis_prefix: "Yz:pokecount:"
 
-deepseek_sk: "" 
-# 模型可选：deepseek-chat / deepseek-coder
-deepseek_model: "deepseek-chat" 
-deepseek_url: "https://api.deepseek.com/v1/chat/completions" 
+# KimiAI设置
+moonshot_sk: ""
+moonshot_model: moonshot-v1-8k
+moonshot_url: https://api.moonshot.cn/v1/chat/completions
 
-qwen_api_key: ""  
-# 模型可选: qwen-turbo/qwen-plus/qwen-max
-qwen_model: "qwen-max" 
-qwen_base_url: "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation" 
-# 是否启用联网搜索功能
-qwen_enable_search: false 
+# DeepSeekAI配置
+deepseek_sk: ""
+deepseek_model: deepseek-chat
+deepseek_url: https://api.deepseek.com/v1/chat/completions
 
+# QwenAI配置
+qwen_api_key: ""
+qwen_model: qwen-max
+qwen_base_url: https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation
+qwen_enable_search: false
+
+# ICQQ表情回应配置
+emoji_enable: false
+emoji_whiteUserList: []
+emoji_blackUserList: []
+emoji_whiteGroupList: []
+emoji_blackGroupList: []
+emoji_faceId: ["66"]
+emoji_random: 100
+emoji_sleepTime: 100
+emoji_all: true
+
+
+# NTQQ表情回应配置
+onebot_emoji_enable: false 
+onebot_emoji_whiteUserList: []  
+onebot_emoji_whiteGroupList: []  
+onebot_emoji_blackUserList: [] 
+onebot_emoji_blackGroupList: []  
+onebot_emoji_globalRandom: 100  onebot_emoji_sleepTime: 100  
+onebot_emoji_all: true 
+onebot_emoji_fixedEmojiId: 66  
+
+
+# 系统配置
 deviceScaleFactor: 1

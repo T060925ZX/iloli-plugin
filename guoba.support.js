@@ -4,22 +4,31 @@ import yaml from 'yaml'
 import lodash from 'lodash'
 
 export function supportGuoba() {
+  // 配置文件路径
   const configDir = path.join(process.cwd(), 'plugins/iloli-plugin/config')
   const configPath = path.join(configDir, 'config.yaml')
   const defaultConfigPath = path.join(configDir, 'default_config/config.yaml')
 
+  // 读取配置的通用方法
   const getConfig = () => {
     try {
       let config = {}
+      
+      // 读取默认配置
       if (fs.existsSync(defaultConfigPath)) {
-        config = yaml.parse(fs.readFileSync(defaultConfigPath, 'utf8')) || {}
+        const defaultData = fs.readFileSync(defaultConfigPath, 'utf8')
+        config = yaml.parse(defaultData) || {}
       }
+      
+      // 合并用户配置
       if (fs.existsSync(configPath)) {
-        config = lodash.merge({}, config, yaml.parse(fs.readFileSync(configPath, 'utf8')) || {})
+        const userData = fs.readFileSync(configPath, 'utf8')
+        config = lodash.merge({}, config, yaml.parse(userData) || {})
       }
+      
       return config
     } catch (e) {
-      console.error('[iloli-plugin] 配置读取失败:', e)
+      console.error('[iloli-plugin] 读取配置失败:', e)
       return {}
     }
   }
@@ -28,124 +37,158 @@ export function supportGuoba() {
     pluginInfo: {
       name: 'iloli-plugin',
       title: '萝莉插件',
-      description: '桀桀桀',
-      author: '@Jiaozi',
-      authorLink: 'https://github.com/T060925ZX',
-      link: 'https://github.com/T060925ZX/iloli-plugin',
+      description: '多功能插件集合，包含多种AI接口和趣味功能',
+      author: '插件作者',
+      authorLink: '作者链接(如果有)',
+      link: '插件链接(如果有)',
       isV3: true,
+      isV2: false,
       showInMenu: true,
       icon: 'mdi:robot-happy-outline',
       iconColor: '#ff9ff3',
     },
     configInfo: {
       schemas: [
-        // ============ 基础开关 ============
         {
           component: 'Divider',
-          label: '戳一戳设置',
-          componentProps: { orientation: 'left', plain: true }
+          label: '基础设置',
+          componentProps: {
+            orientation: 'left',
+            plain: true
+          }
         },
         {
           field: 'chuo',
-          label: '戳一戳开关',
+          label: '戳一戳功能',
+          helpMessage: '是否启用戳一戳互动功能',
           component: 'Switch',
-          componentProps: { activeText: '启用', inactiveText: '禁用' }
+          componentProps: {
+            activeText: '启用',
+            inactiveText: '禁用'
+          }
         },
         {
-          field: 'probabilities.text',
-          label: '文字回复概率',
+          component: 'Divider',
+          label: '戳一戳概率设置',
+          componentProps: {
+            orientation: 'left',
+            plain: true
+          }
+        },
+        {
+          field: 'probabilities_text',
+          label: '文本回复概率',
           component: 'InputNumber',
-          componentProps: { min: 0, max: 1, step: 0.01, precision: 2 },
-          helpMessage: '0-1之间的小数，例如0.6表示60%概率'
+          componentProps: {
+            min: 0,
+            max: 1,
+            step: 0.01
+          }
         },
         {
-          field: 'probabilities.img',
+          field: 'probabilities_img',
           label: '图片回复概率',
           component: 'InputNumber',
-          componentProps: { min: 0, max: 1, step: 0.01, precision: 2 },
-          helpMessage: '0-1之间的小数，例如0.6表示60%概率'
+          componentProps: {
+            min: 0,
+            max: 1,
+            step: 0.01
+          }
         },
         {
-          field: 'probabilities.voice',
+          field: 'probabilities_voice',
           label: '语音回复概率',
           component: 'InputNumber',
-          componentProps: { min: 0, max: 1, step: 0.01, precision: 2 },
-          helpMessage: '0-1之间的小数，例如0.6表示60%概率'
+          componentProps: {
+            min: 0,
+            max: 1,
+            step: 0.01
+          }
         },
         {
-          field: 'probabilities.mute',
+          field: 'probabilities_mute',
           label: '禁言概率',
           component: 'InputNumber',
-          componentProps: { min: 0, max: 1, step: 0.01, precision: 2 },
-          helpMessage: '0-1之间的小数，例如0.6表示60%概率'
+          componentProps: {
+            min: 0,
+            max: 1,
+            step: 0.01
+          }
         },
         {
-          field: 'probabilities.video',
+          field: 'probabilities_video',
           label: '视频回复概率',
           component: 'InputNumber',
-          componentProps: { min: 0, max: 1, step: 0.01, precision: 2 },
-          helpMessage: '0-1之间的小数，例如0.6表示60%概率',
-          bottomHelpMessage: '所有概率总和建议不超过1'
+          componentProps: {
+            min: 0,
+            max: 1,
+            step: 0.01
+          }
         },
         {
-          field: 'settings.master',
+          component: 'Divider',
+          label: '通用设置',
+          componentProps: {
+            orientation: 'left',
+            plain: true
+          }
+        },
+        {
+          field: 'settings_master',
           label: '主人称呼',
-          component: 'Input',
-          componentProps: { placeholder: '设置主人称呼显示' }
+          component: 'Input'
         },
         {
-          field: 'settings.mutetime',
-          label: '基础禁言时间(分钟)',
-          component: 'InputNumber',
-          componentProps: { min: 0, precision: 0 },
-          helpMessage: '0表示自动递增'
+          field: 'settings_mutetime',
+          label: '禁言时长(分钟)',
+          component: 'InputNumber'
         },
         {
-          field: 'settings.speakerapi',
-          label: '语音合成角色',
-          component: 'Input',
-          componentProps: { placeholder: '设置语音合成角色' }
+          field: 'settings_speakerapi',
+          label: '语音合成API',
+          component: 'Input'
         },
         {
-          field: 'settings.emoji_api',
-          label: '表情包API地址',
-          component: 'Input',
-          componentProps: { placeholder: '输入表情包API完整URL' }
+          field: 'settings_emoji_api',
+          label: '表情API地址',
+          component: 'Input'
         },
         {
-          field: 'settings.video_api',
+          field: 'settings_video_api',
           label: '视频API地址',
-          component: 'Input',
-          componentProps: { placeholder: '输入视频API完整URL' }
+          component: 'Input'
         },
         {
-          field: 'settings.tts_api',
+          field: 'settings_tts_api',
           label: '语音合成API地址',
-          component: 'Input',
-          componentProps: { placeholder: '输入TTS API完整URL' }
+          component: 'Input'
         },
         {
-          field: 'settings.redis_prefix',
-          label: 'Redis计数前缀',
-          component: 'Input',
-          componentProps: { placeholder: '设置Redis计数前缀' }
+          field: 'settings_redis_prefix',
+          label: 'Redis前缀',
+          component: 'Input'
         },
-
-        // ============ AI接口设置 ============
         {
           component: 'Divider',
           label: 'Moonshot AI 设置',
-          componentProps: { orientation: 'left', plain: true }
+          componentProps: {
+            orientation: 'left',
+            plain: true
+          }
         },
         {
           field: 'moonshot_sk',
           label: 'API Key',
+          helpMessage: 'Moonshot AI 的 API Key',
           component: 'Input',
-          componentProps: { placeholder: '输入Moonshot API Key' }
+          componentProps: {
+            type: 'password'
+          }
         },
         {
           field: 'moonshot_model',
           label: '模型选择',
+          helpMessage: 'Moonshot AI 使用的模型',
           component: 'Select',
           componentProps: {
             options: [
@@ -157,25 +200,31 @@ export function supportGuoba() {
         },
         {
           field: 'moonshot_url',
-          label: 'API地址',
-          component: 'Input',
-          componentProps: { placeholder: '输入Moonshot API地址' }
+          label: 'API 地址',
+          helpMessage: 'Moonshot AI 的 API 地址',
+          component: 'Input'
         },
-
         {
           component: 'Divider',
           label: 'Deepseek AI 设置',
-          componentProps: { orientation: 'left', plain: true }
+          componentProps: {
+            orientation: 'left',
+            plain: true
+          }
         },
         {
           field: 'deepseek_sk',
           label: 'API Key',
+          helpMessage: 'Deepseek AI 的 API Key',
           component: 'Input',
-          componentProps: { placeholder: '输入Deepseek API Key' }
+          componentProps: {
+            type: 'password'
+          }
         },
         {
           field: 'deepseek_model',
           label: '模型选择',
+          helpMessage: 'Deepseek AI 使用的模型',
           component: 'Select',
           componentProps: {
             options: [
@@ -186,25 +235,31 @@ export function supportGuoba() {
         },
         {
           field: 'deepseek_url',
-          label: 'API地址',
-          component: 'Input',
-          componentProps: { placeholder: '输入Deepseek API地址' }
+          label: 'API 地址',
+          helpMessage: 'Deepseek AI 的 API 地址',
+          component: 'Input'
         },
-
         {
           component: 'Divider',
-          label: '通义千问 AI 设置',
-          componentProps: { orientation: 'left', plain: true }
+          label: '通义千问设置',
+          componentProps: {
+            orientation: 'left',
+            plain: true
+          }
         },
         {
           field: 'qwen_api_key',
           label: 'API Key',
+          helpMessage: '通义千问的 API Key',
           component: 'Input',
-          componentProps: { placeholder: '输入通义千问API Key' }
+          componentProps: {
+            type: 'password'
+          }
         },
         {
           field: 'qwen_model',
           label: '模型选择',
+          helpMessage: '通义千问使用的模型',
           component: 'Select',
           componentProps: {
             options: [
@@ -216,39 +271,218 @@ export function supportGuoba() {
         },
         {
           field: 'qwen_base_url',
-          label: 'API地址',
-          component: 'Input',
-          componentProps: { placeholder: '输入通义千问API地址' }
+          label: 'API 地址',
+          helpMessage: '通义千问的 API 地址',
+          component: 'Input'
         },
         {
           field: 'qwen_enable_search',
-          label: '启用联网搜索',
+          label: '联网搜索',
+          helpMessage: '是否启用联网搜索功能',
           component: 'Switch',
-          componentProps: { activeText: '启用', inactiveText: '禁用' }
+          componentProps: {
+            activeText: '启用',
+            inactiveText: '禁用'
+          }
+        },
+        {
+          component: 'Divider',
+          label: 'ICQQ表情回应',
+          componentProps: {
+            orientation: 'left',
+            plain: true
+          }
+        },
+        {
+          field: 'emoji_enable',
+          label: '启用功能',
+          component: 'Switch',
+          componentProps: {
+            activeText: '启用',
+            inactiveText: '禁用'
+          }
+        },
+        {
+          field: 'emoji_whiteUserList',
+          label: '用户白名单',
+          helpMessage: '填写真实QQ',
+          component: 'GTags',
+          componentProps: {
+            allowAdd: true,
+            allowDel: true,
+          }
+        },
+        {
+          field: 'emoji_blackUserList',
+          label: '用户黑名单',
+          helpMessage: '填写真实QQ',
+          component: 'GTags',
+          componentProps: {
+            allowAdd: true,
+            allowDel: true,
+          }
+        },
+        {
+          field: 'emoji_whiteGroupList',
+          label: '群组白名单',
+          helpMessage: '填写真实QQ群号',
+          component: 'GTags',
+          componentProps: {
+            allowAdd: true,
+            allowDel: true,
+          }
+        },
+        {
+          field: 'emoji_blackGroupList',
+          label: '群组黑名单',
+          helpMessage: '填写真实QQ群号',
+          component: 'GTags',
+          componentProps: {
+            allowAdd: true,
+            allowDel: true,
+          }
+        },
+        {
+          field: 'emoji_faceId',
+          label: '表情ID',
+          component: 'Input'
+        },
+        {
+          field: 'emoji_random',
+          label: '随机概率(%)',
+          component: 'InputNumber'
+        },
+        {
+          field: 'emoji_sleepTime',
+          label: '间隔时间(ms)',
+          component: 'InputNumber'
+        },
+        {
+          field: 'emoji_all',
+          label: '回应用户表情',
+          component: 'Switch',
+          componentProps: {
+            activeText: '启用',
+            inactiveText: '禁用'
+          }
+        },
+        {
+          component: 'Divider',
+          label: 'NTQQ表情回应',
+          componentProps: {
+            orientation: 'left',
+            plain: true
+          }
+        },
+        {
+          field: 'onebot_emoji_enable',
+          label: '启用功能',
+          component: 'Switch',
+          componentProps: {
+            activeText: '启用',
+            inactiveText: '禁用'
+          }
+        },
+        {
+          field: 'onebot_emoji_whiteUserList',
+          label: '用户白名单',
+          helpMessage: '填写真实QQ',
+          component: 'GTags',
+          componentProps: {
+            allowAdd: true,
+            allowDel: true,
+          }
+        },
+        {
+          field: 'onebot_emoji_whiteGroupList',
+          label: '群组白名单',
+          helpMessage: '填写真实QQ',
+          component: 'GTags',
+          componentProps: {
+            allowAdd: true,
+            allowDel: true,
+          }
+        },
+        {
+          field: 'onebot_emoji_blackUserList',
+          label: '用户黑名单',
+          helpMessage: '填写真实QQ群号',
+          component: 'GTags',
+          componentProps: {
+            allowAdd: true,
+            allowDel: true,
+          }
+        },
+        {
+          field: 'onebot_emoji_blackGroupList',
+          label: '群组黑名单',
+          helpMessage: '填写真实QQ群号',
+          component: 'GTags',
+          componentProps: {
+            allowAdd: true,
+            allowDel: true,
+          }
+        },
+        {
+          field: 'onebot_emoji_globalRandom',
+          label: '随机概率(%)',
+          component: 'InputNumber'
+        },
+        {
+          field: 'onebot_emoji_sleepTime',
+          label: '间隔时间(ms)',
+          component: 'InputNumber'
+        },
+        {
+          field: 'onebot_emoji_all',
+          label: '回应用户表情',
+          component: 'Switch',
+          componentProps: {
+            activeText: '启用',
+            inactiveText: '禁用'
+          }
+        },
+        {
+          field: 'onebot_emoji_fixedEmojiId',
+          label: '固定表情ID',
+          component: 'InputNumber'
         },
         {
           component: 'Divider',
           label: '系统设置',
-          componentProps: { orientation: 'left', plain: true }
+          componentProps: {
+            orientation: 'left',
+            plain: true
+          }
         },
         {
           field: 'deviceScaleFactor',
           label: '设备缩放因子',
-          component: 'InputNumber',
-          componentProps: { min: 0.1, max: 2, step: 0.1 },
-          helpMessage: '影响部分渲染内容的缩放比例'
+          component: 'InputNumber'
         }
       ],
-      getConfigData: getConfig,
+      getConfigData() {
+        return getConfig()
+      },
       async setConfigData(data, { Result }) {
         try {
-          const config = lodash.merge({}, getConfig(), data)
-          if (!fs.existsSync(configDir)) fs.mkdirSync(configDir, { recursive: true })
-          fs.writeFileSync(configPath, yaml.stringify(config, { indent: 2 }), 'utf8')
+          const currentConfig = getConfig()
+          const newConfig = lodash.merge({}, currentConfig, data)
+          
+          // 确保目录存在
+          if (!fs.existsSync(configDir)) {
+            fs.mkdirSync(configDir, { recursive: true })
+          }
+          
+          fs.writeFileSync(configPath, yaml.stringify(newConfig, {
+            indent: 2,
+            aliasDuplicateObjects: false
+          }), 'utf8')
+          
           return Result.ok({}, '配置保存成功')
         } catch (e) {
-          console.error('[iloli-plugin] 保存失败:', e)
-          return Result.fail(`保存失败: ${e.message}`)
+          console.error('[iloli-plugin] 保存配置失败:', e)
+          return Result.fail(`保存配置失败: ${e.message}`)
         }
       }
     }
