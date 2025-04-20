@@ -484,9 +484,9 @@ export function supportGuoba() {
           component: 'Select',
           componentProps: {
             options: [
-              { label: 'R18-', value: '0' },
-              { label: 'R18+', value: '1' },
-              { label: 'R18±', value: '2' }
+              { label: '0', value: 'R18-' },
+              { label: '1', value: 'R18+' },
+              { label: '2', value: 'R18±' }
             ]
           }
         },
@@ -496,24 +496,10 @@ export function supportGuoba() {
           component: 'Select',
           componentProps: {
             options: [
-              { label: 'R18-', value: '0' },
-              { label: 'R18+', value: '1' },
-              { label: 'R18±', value: '2' }
+              { label: '0', value: 'R18-' },
+              { label: '1', value: 'R18+' },
+              { label: '2', value: 'R18±' }
             ]
-          }
-        },
-        {
-          field: 'random_pic',
-          label: '随机图片标签预设',
-          helpMessage: '当请求图片时未指定tag，则按此预设随机选择（三维数组格式）',
-          component: 'CodeEditor',
-          componentProps: {
-            language: 'yaml',
-            height: '200px',
-            defaultValue: yaml.stringify([
-              [ ['萝莉'], ['女孩子'] ],
-              [ ['萝莉'], ['猫耳'], ['白丝'] ]
-            ], { indent: 2 })
           }
         },
 
