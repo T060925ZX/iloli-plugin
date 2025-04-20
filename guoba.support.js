@@ -51,7 +51,7 @@ export function supportGuoba() {
       schemas: [
         {
           component: 'Divider',
-          label: '基础设置',
+          label: '戳一戳设置',
           componentProps: {
             orientation: 'left',
             plain: true
@@ -65,14 +65,6 @@ export function supportGuoba() {
           componentProps: {
             activeText: '启用',
             inactiveText: '禁用'
-          }
-        },
-        {
-          component: 'Divider',
-          label: '戳一戳概率设置',
-          componentProps: {
-            orientation: 'left',
-            plain: true
           }
         },
         {
@@ -126,14 +118,6 @@ export function supportGuoba() {
           }
         },
         {
-          component: 'Divider',
-          label: '通用设置',
-          componentProps: {
-            orientation: 'left',
-            plain: true
-          }
-        },
-        {
           field: 'settings_master',
           label: '主人称呼',
           component: 'Input'
@@ -168,6 +152,7 @@ export function supportGuoba() {
           label: 'Redis前缀',
           component: 'Input'
         },
+
         {
           component: 'Divider',
           label: 'Moonshot AI 设置',
@@ -204,6 +189,7 @@ export function supportGuoba() {
           helpMessage: 'Moonshot AI 的 API 地址',
           component: 'Input'
         },
+
         {
           component: 'Divider',
           label: 'Deepseek AI 设置',
@@ -239,6 +225,7 @@ export function supportGuoba() {
           helpMessage: 'Deepseek AI 的 API 地址',
           component: 'Input'
         },
+
         {
           component: 'Divider',
           label: '通义千问设置',
@@ -285,6 +272,7 @@ export function supportGuoba() {
             inactiveText: '禁用'
           }
         },
+        
         {
           component: 'Divider',
           label: 'ICQQ表情回应',
@@ -366,6 +354,7 @@ export function supportGuoba() {
             inactiveText: '禁用'
           }
         },
+
         {
           component: 'Divider',
           label: 'NTQQ表情回应',
@@ -447,9 +436,76 @@ export function supportGuoba() {
           label: '固定表情ID',
           component: 'InputNumber'
         },
+
         {
           component: 'Divider',
-          label: '系统设置',
+          label: 'pixiv图设置',
+          componentProps: {
+            orientation: 'left',
+            plain: true
+          }
+        },
+        {
+          field: 'pixiv_CD',
+          label: '设置CD',
+          helpMessage: '主人不受限制，单位为秒',
+          component: 'InputNumber'
+        },
+        {
+          field: 'pixiv_proxy',
+          label: '在线反代服务',
+          helpMessage: '出图真的慢，建议自行搭建反代使用魔法',
+          component: 'Input'
+        },
+        {
+          field: 'pixiv_proxyAddress',
+          label: '设置代理地址',
+          helpMessage: '没有可不填，默认为空字符串，但填上面的反代如果大陆访问不了就得填嗷',
+          component: 'Input'
+        },
+        {
+          field: 'pixiv_size',
+          label: '返回图片的规格',
+          helpMessage: '可写值：原图[original] 缩略图[regular]',
+          component: 'Input'
+        },
+        {
+          field: 'pixiv_excludeAI',
+          label: '排除 AI 作品',
+          component: 'Switch',
+          componentProps: {
+            activeText: '启用',
+            inactiveText: '禁用'
+          }
+        },
+        {
+          field: 'pixiv_r18_Master',
+          label: '主人图片规格',
+          component: 'Select',
+          componentProps: {
+            options: [
+              { label: 'R18-', value: '0' },
+              { label: 'R18+', value: '1' },
+              { label: 'R18±', value: '2' }
+            ]
+          }
+        },
+        {
+          field: 'pixiv_r18',
+          label: '主人图片规格',
+          component: 'Select',
+          componentProps: {
+            options: [
+              { label: 'R18-', value: '0' },
+              { label: 'R18+', value: '1' },
+              { label: 'R18±', value: '2' }
+            ]
+          }
+        },
+
+        {
+          component: 'Divider',
+          label: '其它设置',
           componentProps: {
             orientation: 'left',
             plain: true

@@ -55,3 +55,12 @@ onebot_emoji_fixedEmojiId: 66
 
 # 人生模拟器模型选择 (deepseek/moonshot/qwen)
 ai_life_model: deepseek
+
+# Lolicon配置
+pixiv_CD: 30
+pixiv_proxy: 'i.pixiv.re'
+pixiv_proxyAddress: ''
+pixiv_size: 'original'
+pixiv_excludeAI: true
+pixiv_r18_Master: 1
+pixiv_r18: 0
