@@ -1,4 +1,3 @@
-import { createRequire } from "module";
 import { createHash } from 'crypto';
 import puppeteer from 'puppeteer';
 import yaml from 'js-yaml';
