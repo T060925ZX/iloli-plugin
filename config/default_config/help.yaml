@@ -36,3 +36,6 @@
     - icon: 'paimon'
       title: '找[@/QQ号]'
       desc: '查看某人的详细QQ信息'
+    - icon: 'paimon'
+      title: '清屏'
+      desc: '批量撤回，后面可加数字'
