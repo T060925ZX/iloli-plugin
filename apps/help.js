@@ -7,7 +7,8 @@ import Cfg from '../model/Cfg.js';
 const pluginDir = path.resolve(process.cwd(), 'plugins/iloli-plugin');
 const tempDir = path.join(pluginDir, 'temp');
 const iconPath = path.join(pluginDir, 'resources', 'icon');
- const configPath = path.join(pluginDir, 'config', 'help_config.yaml');
+const configPath = path.join(pluginDir, 'config', 'help_config.yaml');
+const yamlPath = path.join(pluginDir, 'config', 'default_config', 'help.yaml');
 
 // 封装重新加载配置的函数
 const reloadConfig = () => {
@@ -45,9 +46,6 @@ const P = (columns * 200 + 188).toFixed(2);
 if (!fs.existsSync(tempDir)) {
   fs.mkdirSync(tempDir, { recursive: true });
 }
-
-// 定义 help.yaml 文件路径
-const yamlPath = path.join(pluginDir, 'config', 'default_config', 'help.yaml');
 
 // 读取 help.yaml 文件并解析为 JavaScript 对象
 const helpData = yaml.load(fs.readFileSync(yamlPath, 'utf8'));
