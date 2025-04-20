@@ -8,7 +8,7 @@
 
 - 主要是写着玩，菜勿喷
 
-- **使用中遇到问题请加 QQ 群咨询：[1014823769](https://qm.qq.com/q/tkbstruiGI)**
+- **使用中遇到问题请加 QQ 群咨询：[983299064](https://qm.qq.com/q/ciLUvOjDyw)  [1014823769](https://qm.qq.com/q/tkbstruiGI)**
 
 ## 安装插件
 
@@ -65,6 +65,3 @@ pnpm install --filter=iloli-plugin
 | 名单 | 主要贡献 |
 |:----: |:----: |
 | [@Jiaozi](https://github.com/T060925ZX) | 新建文件夹（bushi |
-
-> [!TIP]
-> Jiaozi插件交流群 [983299064](https://qm.qq.com/q/ciLUvOjDyw) 
