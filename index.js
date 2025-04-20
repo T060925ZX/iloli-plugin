@@ -108,7 +108,7 @@ async function loadApps() {
     }
 
     const duration = Date.now() - startTime
-    logger.mark(`[iloli插件] 加载完成，成功 ${result.success} 个，失败 ${result.failed} 个，耗时 ${logger.green(duration + 'ms')}`)
+    // logger.mark(`[iloli插件] 加载完成，成功 ${result.success} 个，失败 ${result.failed} 个，耗时 ${logger.green(duration + 'ms')}`)
     
     return { ...result, duration }
   } catch (err) {
