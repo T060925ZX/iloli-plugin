@@ -80,9 +80,9 @@ export class GlobalMessagePlugin extends plugin {
           `\n`,
           _.sample(greetings),
           `\n来自 QQ：${msg.sender} 的留言：`, 
-          `\n============================`,
+          `\n=======================`,
           `\n${msg.message}`,
-          `\n============================`,
+          `\n=======================`,
           `\n⏰ 留言时间：${moment(msg.time).format('YYYY-MM-DD HH:mm:ss')}`,
           `\n📌 来源：${msg.originGroup ? '群聊' : '私聊'}`
         ]
