@@ -1,6 +1,6 @@
 import plugin from '../../../lib/plugins/plugin.js'
 import common from '../../../lib/common/common.js'
-import HttpsProxyAgent from '../model/Cfg.js'
+import Cfg from '../model/Cfg.js'
 import HttpsProxyAgent from 'https-proxy-agent'
 import fetch from 'node-fetch'
 import { segment } from 'oicq'
