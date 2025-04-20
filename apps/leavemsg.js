@@ -3,7 +3,7 @@ import path from 'path'
 import _ from 'lodash'
 import moment from 'moment'
 const pluginDir = path.resolve(process.cwd(), 'plugins/iloli-plugin');
-const DataDir = path.join(pluginDir, 'data', 'AI');
+const DataDir = path.join(pluginDir, 'data');
 
 if (!fs.existsSync(DataDir)) {
     fs.mkdirSync(DataDir, { recursive: true });
@@ -12,8 +12,8 @@ if (!fs.existsSync(DataDir)) {
 export class GlobalMessagePlugin extends plugin {
   constructor() {
     super({
-      name: '全局留言',
-      dsc: '跨群留言提醒功能',
+      name: '[iloli]留言',
+      dsc: '留言提醒',
       event: 'message',
       priority: 100,
       rule: [
@@ -79,8 +79,10 @@ export class GlobalMessagePlugin extends plugin {
           segment.at(qq),
           `\n`,
           _.sample(greetings),
-          `\n来自 QQ：${msg.sender} 的留言：`,  // 直接显示QQ号
+          `\n来自 QQ：${msg.sender} 的留言：`, 
+          `\n============================`,
           `\n${msg.message}`,
+          `\n============================`,
           `\n⏰ 留言时间：${moment(msg.time).format('YYYY-MM-DD HH:mm:ss')}`,
           `\n📌 来源：${msg.originGroup ? '群聊' : '私聊'}`
         ]
