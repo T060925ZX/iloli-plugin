@@ -77,8 +77,8 @@ export class GlobalMessagePlugin extends plugin {
       try {
         const replyContent = [
           segment.at(qq),
-          _.sample(greetings),
           `\n`,
+          _.sample(greetings),
           `\n来自 QQ：${msg.sender} 的留言：`,  // 直接显示QQ号
           `\n${msg.message}`,
           `\n⏰ 留言时间：${moment(msg.time).format('YYYY-MM-DD HH:mm:ss')}`,
