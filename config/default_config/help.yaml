@@ -9,6 +9,9 @@
     - icon: 'paimon'
       title: '今日超能力'
       desc: '随机超能力以及副作用'
+    - icon: 'paimon'
+      title: '来n份xx涩图'
+      desc: '涩图 xx为标签'
 - group: 'AI功能'
   list:
     - icon: 'paimon'
