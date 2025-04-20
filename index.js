@@ -76,7 +76,6 @@ function initConfig() {
 
 // 加载所有模块
 async function loadApps() {
-  const startTime = Date.now()
   const appsPath = path.join(__dirname, 'apps')
   const result = { success: 0, failed: 0, apps: {} }
 
@@ -90,6 +89,8 @@ async function loadApps() {
     const files = fs.readdirSync(appsPath)
       .filter(file => file.endsWith('.js'))
 
+    const startTime = Date.now()
+    
     // 使用for循环保证顺序加载
     for (const file of files) {
       const name = file.replace('.js', '')
