@@ -5,17 +5,9 @@ import yaml from 'js-yaml';
 import path from 'path';
 import fs from 'fs';
 import Cfg from '../model/Cfg.js';
-
 const pluginDir = path.resolve(process.cwd(), 'plugins/iloli-plugin');
 const tempDir = path.join(pluginDir, 'temp');
-const require = createRequire(import.meta.url);
-const { exec } = require("child_process");
-
-
-// 定义图标路径
 const iconPath = path.join(pluginDir, 'resources', 'icon');
-
-// 读取 config.yaml 文件路径
  const configPath = path.join(pluginDir, 'config', 'help_config.yaml');
 
 // 封装重新加载配置的函数
@@ -27,7 +19,7 @@ const reloadConfig = () => {
     const columns = Cfg.getConfig('config').columns || 3;
     const deviceScaleFactor = Cfg.getConfig('config').deviceScaleFactor || 1;
     const yiyan = Cfg.getConfig('config').default_hitokoto || '种自己的花，爱自己的宇宙';
-    const bg = Cfg.getConfig('config').background_image_url || 'none';
+    const bg = Cfg.getConfig('config').background_image_url || 'https://gitee.com/T060925ZX/iloli-plugin/raw/main/resources/image/nh.webp';
 
     // 单独返回每一项数据
     return {
@@ -282,7 +274,7 @@ const generateHTML = () => {
         ${items}
         <div id="hitokoto" class="logo">${yiyan}</div>
       </div>
-        <bq>©Jiaozi 2025 Help-Lite</bq>
+        <bq>Yunzai & iloli-plugin</bq>
     </body>
     </html>
   `;
@@ -314,7 +306,7 @@ const preRenderHelp = async () => {
 
   // 设置视口大小
   await page.setViewport({
-    width: 988,
+    width: 1240,
     height: 520,
     deviceScaleFactor: deviceScaleFactor
   });
