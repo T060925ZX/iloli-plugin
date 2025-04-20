@@ -16,7 +16,7 @@ const { exec } = require("child_process");
 const iconPath = path.join(pluginDir, 'resources', 'icon');
 
 // 读取 config.yaml 文件路径
- const configPath = path.join(pluginDir, 'config', 'help_onfig.yaml');
+ const configPath = path.join(pluginDir, 'config', 'help_config.yaml');
 
 // 封装重新加载配置的函数
 const reloadConfig = () => {
