@@ -5,8 +5,8 @@ import moment from 'moment'
 const pluginDir = path.resolve(process.cwd(), 'plugins/iloli-plugin');
 const DataDir = path.join(pluginDir, 'data', 'AI');
 
-if (!fs.existsSync(tempDir)) {
-    fs.mkdirSync(tempDir, { recursive: true });
+if (!fs.existsSync(DataDir)) {
+    fs.mkdirSync(DataDir, { recursive: true });
 }
 
 export class GlobalMessagePlugin extends plugin {
