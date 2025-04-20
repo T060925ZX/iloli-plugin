@@ -20,12 +20,12 @@ export class OptimizedKimiPlugin extends plugin {
       priority: -500,
       rule: [
         {
-          reg: "^#?kimi(.*)$",
-          fnc: "chat"
+          reg: "^#kimi结束对话$",
+          fnc: "endChat"
         },
         {
-          reg: "^#kimi结束$",
-          fnc: "endChat"
+          reg: "^#?kimi(.*)$",
+          fnc: "chat"
         },
         {
           reg: "^#kimi帮助$",
@@ -48,7 +48,7 @@ export class OptimizedKimiPlugin extends plugin {
       "🌟 Kimi AI Pro 使用指南 🌟",
       "1. 开始对话: #kimi 你好",
       "2. 多轮对话: 自动保持上下文",
-      "3. 结束对话: #kimi结束",
+      "3. 结束对话: #kimi结束对话",
       "4. 重置对话: #kimi重置",
       "5. 当前模型: " + (this.config.moonshot_model || "moonshot-v1-8k"),
       "6. 官方文档: https://platform.moonshot.cn/docs"

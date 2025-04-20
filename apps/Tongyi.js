@@ -19,12 +19,12 @@ export class TongyiQianwenPlugin extends plugin {
             priority: -500,
             rule: [
                 {
-                    reg: '^#?qwen(.*)$',
-                    fnc: 'chat'
-                },
-                {
                     reg: '^#qwen结束对话$',
                     fnc: "endChat"
+                },
+                {
+                    reg: '^#?qwen(.*)$',
+                    fnc: 'chat'
                 },
                 {
                     reg: '^#qwen帮助$',

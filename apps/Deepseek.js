@@ -20,12 +20,12 @@ export class DeepSeekPlugin extends plugin {
             priority: -500,
             rule: [
                 {
-                    reg: '^#?dp(.*)$',
-                    fnc: 'chat'
-                },
-                {
                     reg: '^#dp结束对话$',
                     fnc: "endChat"
+                },
+                {
+                    reg: '^#?dp(.*)$',
+                    fnc: 'chat'
                 },
                 {
                     reg: '^#dp帮助$',
