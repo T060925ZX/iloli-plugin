@@ -484,9 +484,9 @@ export function supportGuoba() {
           component: 'Select',
           componentProps: {
             options: [
-              { label: '0', value: 'R18-' },
-              { label: '1', value: 'R18+' },
-              { label: '2', value: 'R18±' }
+              { label: 'R18-', value: '0' },
+              { label: 'R18+', value: '1' },
+              { label: 'R18±', value: '2' }
             ]
           }
         },
@@ -496,9 +496,9 @@ export function supportGuoba() {
           component: 'Select',
           componentProps: {
             options: [
-              { label: '0', value: 'R18-' },
-              { label: '1', value: 'R18+' },
-              { label: '2', value: 'R18±' }
+              { label: 'R18-', value: '0' },
+              { label: 'R18+', value: '1' },
+              { label: 'R18±', value: '2' }
             ]
           }
         },
