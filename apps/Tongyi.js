@@ -70,7 +70,7 @@ export class TongyiQianwenPlugin extends plugin {
         const sessionFile = path.join(tempDir, `${e.user_id}_QWEN.json`);
         if (fs.existsSync(sessionFile)) {
             fs.unlinkSync(sessionFile);
-            await e.reply("✅ 对话历史已清除");
+            await e.reply("✅ Qwen 对话历史已清除");
         } else {
             await e.reply("⚠️ 没有找到对话记录");
         }
