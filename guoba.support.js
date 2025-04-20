@@ -502,6 +502,20 @@ export function supportGuoba() {
             ]
           }
         },
+        {
+          field: 'random_pic',
+          label: '随机图片标签预设',
+          helpMessage: '当请求图片时未指定tag，则按此预设随机选择（三维数组格式）',
+          component: 'CodeEditor',
+          componentProps: {
+            language: 'yaml',
+            height: '200px',
+            defaultValue: yaml.stringify([
+              [ ['萝莉'], ['女孩子'] ],
+              [ ['萝莉'], ['猫耳'], ['白丝'] ]
+            ], { indent: 2 })
+          }
+        },
 
         {
           component: 'Divider',

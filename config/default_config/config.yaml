@@ -64,3 +64,11 @@ pixiv_size: 'original'
 pixiv_excludeAI: true
 pixiv_r18_Master: 1
 pixiv_r18: 0
+random_pic:
+  -
+    - - "萝莉"
+    - - "女孩子"
+  -
+    - - "萝莉"
+    - - "猫耳"
+    - - "白丝"
