@@ -492,7 +492,7 @@ export function supportGuoba() {
         },
         {
           field: 'pixiv_r18',
-          label: '主人图片规格',
+          label: '群员图片规格',
           component: 'Select',
           componentProps: {
             options: [
