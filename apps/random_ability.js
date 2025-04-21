@@ -48,7 +48,7 @@ export class RandomAbility extends plugin {
             // 加载配置
             await this.loadConfig();
             
-            logger.warn(`[随机超能力] 初始化完成，加载 ${this.abilityData.buff.size} 个超能力和 ${this.abilityData.debuff.size} 个副作用`);
+            logger.debug(`[随机超能力] 初始化完成，加载 ${this.abilityData.buff.size} 个超能力和 ${this.abilityData.debuff.size} 个副作用`);
         } catch (err) {
             logger.warn('[随机超能力] 初始化失败:', err);
         }
