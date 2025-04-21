@@ -18,4 +18,23 @@ export default class Button {
         ])
     }
 
+    help() {
+        return segment.button([
+            { text: '随机超能力", callback: `#随机超能力` },
+            { text: "涩图", callback: `#来份涩图` },
+        ], [
+            { text: "戳他", callback: `戳他` },
+        ], [
+            { text: "留言", callback: `#留言` },
+        ])
+    }
+
+    ai() {
+        return segment.button([
+            { text: "DeepSeek", input: `#dp` },
+            { text: "Qwen", input: `#qwen` },
+            { text: "Kimi", input: `#kimi` },
+        ])
+    }
+
 }

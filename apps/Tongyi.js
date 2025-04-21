@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import fetch from 'node-fetch';
 import Cfg from '../model/Cfg.js';
+import Button from '../model/Buttons.js';
 
 const pluginDir = path.resolve(process.cwd(), 'plugins/iloli-plugin');
 const tempDir = path.join(pluginDir, 'temp', 'AI');
@@ -104,7 +105,8 @@ export class TongyiQianwenPlugin extends plugin {
             messages.push({ role: "assistant", content: response });
             this.saveSession(sessionFile, messages);
             
-            await e.reply(response, true); // 自动分片发送长消息
+            await e.reply([response, new Button().ai()], true); 
+
         } catch (error) {
             await e.reply([
                 '❌ 请求失败',

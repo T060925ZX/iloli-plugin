@@ -2,6 +2,7 @@ import fetch from "node-fetch";
 import fs from 'fs';
 import path from 'path';
 import Cfg from '../model/Cfg.js';
+import Button from '../model/Buttons.js';
 
 const pluginDir = path.resolve(process.cwd(), 'plugins/iloli-plugin');
 const tempDir = path.join(pluginDir, 'temp', 'AI');
@@ -55,7 +56,7 @@ export class DeepSeekPlugin extends plugin {
         const filePath = path.join(tempDir, `${e.user_id}_DS.json`);
         if (fs.existsSync(filePath)) {
             fs.unlinkSync(filePath);
-            await e.reply('✅ DeepSeek 对话历史已清除');
+            await e.reply(['✅ DeepSeek 对话历史已清除', new Button().ai()]);
         } else {
             await e.reply('⚠️ 没有找到您的对话记录');
         }
@@ -89,7 +90,7 @@ export class DeepSeekPlugin extends plugin {
             this.saveSession(sessionFile, messages);
 
             // 5. 回复用户
-            await e.reply(response, true);
+            await e.reply([response, new Button().ai()], true);
         } catch (error) {
             await e.reply(`❌ 请求失败: ${error.message}`);
             logger.error('DeepSeek API Error:', error);

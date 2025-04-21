@@ -2,6 +2,7 @@ import fetch from "node-fetch";
 import fs from "fs";
 import path from "path";
 import Cfg from "../model/Cfg.js";
+import Button from '../model/Buttons.js';
 
 const pluginDir = path.resolve(process.cwd(), 'plugins/iloli-plugin');
 const tempDir = path.join(pluginDir, 'temp', 'AI');
@@ -115,7 +116,7 @@ export class OptimizedKimiPlugin extends plugin {
       this.saveSession(sessionFile, messages);
 
       // 6. 回复用户
-      await e.reply(response, true);
+      await e.reply([response, new Button().ai()], true);
     } catch (error) {
       await e.reply(`❌ 请求失败: ${error.message}`);
       logger.error("Kimi API Error:", error);
