@@ -10,8 +10,9 @@
   "license": "MIT",
   "dependencies": {
     "puppeteer": "*",
-    "yaml": "^2.7.1",
+    "yaml": "*",
     "js-yaml": "*",
-    "sharp": "*"
+    "sharp": "*",
+    "axios": "*"
   }
 }

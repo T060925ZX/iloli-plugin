@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import axios from "axios";
 import moment from "moment";
 
 export class QQInfoPlugin extends plugin {
@@ -80,8 +80,8 @@ export class QQInfoPlugin extends plugin {
   // 获取QQ信息
   async getQQInfo(qqNumber) {
     try {
-      const response = await fetch(`http://jiuli.xiaoapi.cn/i/qq/qq_level.php?qq=${qqNumber}`);
-      const data = await response.json();
+      const response = await axios.get(`http://jiuli.xiaoapi.cn/i/qq/qq_level.php?qq=${qqNumber}`);
+      const data = response.data;
       if (data && data.code === 200) {
         return `=========个人信息=========
 QQ: ${data.qq}
@@ -123,31 +123,31 @@ IP属地(仅供参考): ${data.ip_city}`;
     }
   }
 
-// 获取同群信息
-async getGroupInfos(qqNumber) {
-  const groupList = Array.from(this.e.bot.gl.values());
-  const tasks = groupList.map(group => {
-    return (async () => {
-      try {
-        const groupId = group.group_id;
-        const groupObj = this.e.bot.pickGroup(groupId);
-        const memberMap = await groupObj.getMemberMap();
+  // 获取同群信息
+  async getGroupInfos(qqNumber) {
+    const groupList = Array.from(this.e.bot.gl.values());
+    const tasks = groupList.map(group => {
+      return (async () => {
+        try {
+          const groupId = group.group_id;
+          const groupObj = this.e.bot.pickGroup(groupId);
+          const memberMap = await groupObj.getMemberMap();
 
-        // 检查群聊成员是否包含目标QQ号
-        if (memberMap.has(Number(qqNumber))) {
-          const info = await groupObj.getInfo();
-          const memberInfo = await groupObj.pickMember(qqNumber).getInfo();
+          // 检查群聊成员是否包含目标QQ号
+          if (memberMap.has(Number(qqNumber))) {
+            const info = await groupObj.getInfo();
+            const memberInfo = await groupObj.pickMember(qqNumber).getInfo();
 
-          // 将时间戳转换为可读的日期格式
-          info.last_join_time = moment(info.last_join_time * 1000).format('YYYY-MM-DD HH:mm:ss');
-          info.shutup_time_whole = info.shutup_time_whole === 0 ? '无' : moment(info.shutup_time_whole * 1000).format('YYYY-MM-DD HH:mm:ss');
-          info.shutup_time_me = info.shutup_time_me === 0 ? '无' : moment(info.shutup_time_me * 1000).format('YYYY-MM-DD HH:mm:ss');
-          info.update_time = moment(info.update_time * 1000).format('YYYY-MM-DD HH:mm:ss');
-          info.last_sent_time = moment(info.last_sent_time * 1000).format('YYYY-MM-DD HH:mm:ss');
-          info.create_time = moment(info.create_time * 1000).format('YYYY-MM-DD HH:mm:ss');
+            // 将时间戳转换为可读的日期格式
+            info.last_join_time = moment(info.last_join_time * 1000).format('YYYY-MM-DD HH:mm:ss');
+            info.shutup_time_whole = info.shutup_time_whole === 0 ? '无' : moment(info.shutup_time_whole * 1000).format('YYYY-MM-DD HH:mm:ss');
+            info.shutup_time_me = info.shutup_time_me === 0 ? '无' : moment(info.shutup_time_me * 1000).format('YYYY-MM-DD HH:mm:ss');
+            info.update_time = moment(info.update_time * 1000).format('YYYY-MM-DD HH:mm:ss');
+            info.last_sent_time = moment(info.last_sent_time * 1000).format('YYYY-MM-DD HH:mm:ss');
+            info.create_time = moment(info.create_time * 1000).format('YYYY-MM-DD HH:mm:ss');
 
-          // 美化输出格式
-          return `=========群组信息=========
+            // 美化输出格式
+            return `=========群组信息=========
  - 群ID: ${info.group_id}
  - 群名称: ${info.group_name}
  - 成员数量: ${info.member_count}
@@ -166,19 +166,18 @@ async getGroupInfos(qqNumber) {
  - 用户昵称: ${memberInfo.nickname}
  - 用户角色: ${memberInfo.role}
  - 用户专属头衔: ${memberInfo.title ? memberInfo.title : '无'}`;
+          }
+        } catch (error) {
+          logger.warn(`获取群${group.group_id}成员列表时出错：`, error);
         }
-      } catch (error) {
-        logger.warn(`获取群${group.group_id}成员列表时出错：`, error);
-      }
-      return null;
-    })();
-  });
+        return null;
+      })();
+    });
 
-  // 并行执行所有任务
-  const results = await Promise.all(tasks);
+    // 并行执行所有任务
+    const results = await Promise.all(tasks);
 
-  // 过滤出非空结果
-  return results.filter(group => group !== null);
-}
-
+    // 过滤出非空结果
+    return results.filter(group => group !== null);
+  }
 }
