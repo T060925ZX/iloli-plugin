@@ -9,6 +9,7 @@ const tempDir = path.join(pluginDir, 'temp');
 const iconPath = path.join(pluginDir, 'resources', 'icon');
 const configPath = path.join(pluginDir, 'config', 'help_config.yaml');
 const yamlPath = path.join(pluginDir, 'config', 'default_config', 'help.yaml');
+import Button from '../model/Buttons.js';
 
 // 封装重新加载配置的函数
 const reloadConfig = () => {
