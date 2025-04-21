@@ -1,31 +1,25 @@
+import { message } from "oicq"
+
 Bot.on("message.group", e => {
-  if (/.*有.*吗.*/.test(e.raw_message)) { 
-    (new HaveReply()).reply(e);
+  const message = e?.message?.[0]?.text;
+  if (message && (message.match(/(.*)?有(.*)?(吗|嘛)(.*)?/) || message.match(/(.*)?有没(.*)?/))) {
+    (new Huifu()).huifu(e);
   }
 });
 
-export class HaveReply extends plugin {
+export class Huifu extends plugin {
   constructor() {
     super({
-      name: "有的兄弟,有的",
+      name: "有的兄弟，有的",
       event: "message",
       priority: -114514,
       rule: []
     });
   }
 
-  reply(e) {
-    // 排除机器人自己的消息
-    if (e.user_id === this.client.uin) return;
-    
-    // 排除指令消息（以#或/开头）
-    if (/^[#/]/.test(e.raw_message)) return;
-    
-    // 发送回复
+  huifu(e) {
+    // 实现随机回复逻辑
     let ID = e.group_id;
-    Bot.pickGroup(ID).sendMsg("有的兄弟，有的");
-    
-    // 调试用：打印匹配到的原始消息
-    logger.warn("匹配到消息:", e.raw_message);
+    Bot.pickGroup(ID).sendMsg('有的兄弟，有的');
   }
 }
