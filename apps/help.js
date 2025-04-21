@@ -407,7 +407,7 @@ export class HelpPlugin extends plugin {
     if (fs.existsSync(screenshotPath)) {
       // 发送缓存的图片
       const help_image = segment.image(`file:///${screenshotPath}`)
-      await e.reply([help_image, new Button().ai()]);
+      await e.reply([help_image, new Button().help()]);
     } else {
       await e.reply('帮助图片未生成，请稍后再试。');
     }
