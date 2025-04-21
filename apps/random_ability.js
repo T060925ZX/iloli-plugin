@@ -99,7 +99,7 @@ export class RandomAbility extends plugin {
                 `• 副作用: ${this.abilityData.debuff.size}种`,
                 '——————————————',
                 '输入 #能力统计 查看详情'
-            ].join('\n'), new Button().ability());
+            ].join('\n'));
         } catch (err) {
             await e.reply('❌ 刷新失败，请检查日志');
             logger.error('[随机超能力] 刷新失败:', err);
@@ -115,7 +115,7 @@ export class RandomAbility extends plugin {
             `⚠️ 副作用: ${this.abilityData.debuff.size}种`,
             '——————————————',
             '使用 #刷新能力列表 更新数据'
-        ].join('\n'), new Button().ability());
+        ].join('\n'));
         return true;
     }
 
@@ -137,7 +137,7 @@ export class RandomAbility extends plugin {
             '——————————————'
         ];
 
-        await e.reply(msg.join('\n'), new Button().ability());
+        await e.reply([msg.join('\n'), new Button().ability()]);
         return true;
     }
 
@@ -161,7 +161,7 @@ export class RandomAbility extends plugin {
             '✅ 超能力添加成功',
             `新增: ${newBuff}`,
             `当前超能力总数: ${this.abilityData.buff.size}`
-        ].join('\n'), new Button().ability());
+        ].join('\n'));
         return true;
     }
 
@@ -185,7 +185,7 @@ export class RandomAbility extends plugin {
             '✅ 副作用添加成功',
             `新增: ${newDebuff}`,
             `当前副作用总数: ${this.abilityData.debuff.size}`
-        ].join('\n'), new Button().ability());
+        ].join('\n'));
         return true;
     }
 
