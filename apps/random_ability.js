@@ -1,4 +1,4 @@
-import Button from '../model/Button.js';
+import Button from '../model/Buttons.js';
 import Cfg from '../model/Cfg.js';
 import yaml from 'yaml';
 import fs from 'node:fs';
