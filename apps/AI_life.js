@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import fetch from 'node-fetch';
 import Cfg from '../model/Cfg.js';
+import Button from '../model/Buttons.js';
 
 const pluginDir = path.resolve(process.cwd(), 'plugins/iloli-plugin');
 const SAVE_DIR = path.join(pluginDir, 'temp', 'life_simulator');
@@ -127,7 +128,7 @@ export class AILifeSimulator extends plugin {
 
             this.saveData(savePath, lifeData);
             
-            await e.reply([
+            const startMsg = [
                 '🎉 人生已启动！',
                 '——————————',
                 `📜 背景: ${background}`,
@@ -135,7 +136,9 @@ export class AILifeSimulator extends plugin {
                 `⚠️ 挑战: ${challenges.join('、')}`,
                 '——————————',
                 '输入 #下一阶段 继续'
-            ].join('\n'));
+            ].join('\n');
+
+            await e.reply([startMsg, new Button().life()]);
 
         } catch (err) {
             await e.reply('❌ 创建失败，请稍后再试');
@@ -156,7 +159,8 @@ export class AILifeSimulator extends plugin {
             let lifeData = this.loadData(savePath);
             
             if (lifeData.currentStage >= this.stages.length - 1) {
-                await e.reply('🎉 人生已完结！用 #重开人生 开始新生');
+                const endMsg = '🎉 人生已完结！用 #重开人生 开始新生';
+                await e.reply([endMsg, new Button().life()]);
                 return true;
             }
 
@@ -183,7 +187,7 @@ export class AILifeSimulator extends plugin {
 
             this.saveData(savePath, lifeData);
             
-            await e.reply([
+            const stageMsg = [
                 `🌠 ${nextStage.name} (${nextStage.ageRange})`,
                 '——————————',
                 ...events.slice(0, 3).map((e, i) => `${i+1}. ${e}`),
@@ -195,7 +199,9 @@ export class AILifeSimulator extends plugin {
                 lifeData.currentStage < this.stages.length - 1 
                     ? '输入 #下一阶段 继续' 
                     : '人生旅程已完成'
-            ].join('\n'));
+            ].join('\n');
+
+            await e.reply([stageMsg, new Button().life()]);
 
         } catch (err) {
             await e.reply('❌ 推进失败: ' + this.getErrorMsg(err));
@@ -229,7 +235,7 @@ export class AILifeSimulator extends plugin {
                         },
                         { role: "user", content: prompt }
                     ],
-                    temperature: 0.7,
+                    temperature: 1.5,
                     response_format: { type: "json_object" }
                 };
 
@@ -336,7 +342,7 @@ export class AILifeSimulator extends plugin {
             const data = this.loadData(this.getSavePath(e.user_id));
             const stage = this.stages[data.currentStage];
             
-            await e.reply([
+            const lifeMsg = [
                 `📜 ${data.name}的人生`,
                 '——————————',
                 `阶段: ${stage.name} (${data.age}岁)`,
@@ -345,7 +351,9 @@ export class AILifeSimulator extends plugin {
                 ...Object.entries(data.attributes).map(([k, v]) => `· ${k}: ${v}`),
                 '——————————',
                 `输入 #下一阶段 继续`
-            ].join('\n'));
+            ].join('\n');
+
+            await e.reply([lifeMsg, new Button().life()]);
         } catch {
             await e.reply('⚠️ 你还没有开始人生');
         }
@@ -355,7 +363,8 @@ export class AILifeSimulator extends plugin {
     async resetLife(e) {
         try {
             fs.unlinkSync(this.getSavePath(e.user_id));
-            await e.reply('🔄 人生已重置，用 #模拟人生 开始');
+            const resetMsg = '🔄 人生已重置，用 #模拟人生 开始';
+            await e.reply([resetMsg, new Button().life()]);
         } catch {
             await e.reply('⚠️ 你还没有开始人生');
         }
@@ -363,7 +372,7 @@ export class AILifeSimulator extends plugin {
     }
 
     async showHelp(e) {
-        await e.reply([
+        const helpMsg = [
             '📚 使用帮助',
             '——————————',
             '#模拟人生 - 开始新人生',
@@ -375,7 +384,9 @@ export class AILifeSimulator extends plugin {
             '——————————',
             '人生阶段:',
             ...this.stages.map(s => `· ${s.name} (${s.ageRange})`)
-        ].join('\n'));
+        ].join('\n');
+        
+        await e.reply([helpMsg, new Button().life()]);
         return true;
     }
 }

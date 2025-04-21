@@ -8,4 +8,14 @@ export default class Button {
         ])
     }
 
+    life() {
+        return segment.button([
+            { text: "下一阶段", callback: `#下一阶段` },
+            { text: "重开", callback: `#重开人生` },
+        ], [
+            { text: "模拟人生", callback: `#模拟人生` },
+            { text: "我的人生", callback: `#我的人生` },
+        ])
+    }
+
 }
