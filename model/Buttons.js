@@ -21,7 +21,7 @@ export default class Button {
     help() {
         return segment.button([
             { text: "随机超能力", callback: `#随机超能力` },
-            { text: "涩图", input: `#来份涩图` },
+            { text: "涩图", input: `来份涩图` },
         ], [
             { text: "戳他", input: `戳他` },
             { text: "留言", input: `#留言` },
