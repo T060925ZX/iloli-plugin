@@ -39,7 +39,7 @@ export class TongyiQianwenPlugin extends plugin {
 
     validateConfig() {
         if (!this.config.qwen_api_key) {
-            logger.error('通义千问API密钥未配置！请在config.yaml中添加qwen_api_key');
+            // logger.error('通义千问API密钥未配置！请在config.yaml中添加qwen_api_key');
         }
     }
 

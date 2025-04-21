@@ -70,7 +70,7 @@ export class DeepSeekPlugin extends plugin {
         // 2. 构建消息
         const userMessage = e.msg.replace(/^#?dp\s*/, '').trim();
         if (!userMessage) {
-            await e.reply('请输入要咨询的内容，例如：#deepseek 你好');
+            await e.reply('请输入要咨询的内容，例如：#dp 你好');
             return true;
         }
 
