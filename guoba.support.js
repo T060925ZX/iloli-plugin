@@ -51,6 +51,20 @@ export function supportGuoba() {
       schemas: [
         {
           component: 'Divider',
+          label: '系统设置',
+          componentProps: {
+            orientation: 'left',
+            plain: true
+          }
+        },
+        {
+          field: 'summary',
+          label: '图片外显',
+          component: 'Input'
+        },
+
+        {
+          component: 'Divider',
           label: '戳一戳设置',
           componentProps: {
             orientation: 'left',
