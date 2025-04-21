@@ -1,25 +1,21 @@
-import { message } from "oicq"
-
-Bot.on("message.group", e => {
-  const message = e?.message?.[0]?.text;
-  if (message && (message.match(/(.*)?有(.*)?(吗|嘛)(.*)?/) || message.match(/(.*)?有没(.*)?/))) {
-    (new Huifu()).huifu(e);
-  }
-});
-
-export class Huifu extends plugin {
+export class Bro extends plugin {
   constructor() {
     super({
-      name: "有的兄弟，有的",
-      event: "message",
-      priority: -114514,
-      rule: []
-    });
+      name: "有的兄弟",
+      dsc: "像这样的兄弟还有九个",
+      event: "message.group",
+      priority: 5001,
+      rule: [
+        {
+          reg: "((.*)?有(.*)?(吗|嘛)(.*)?|(.*)?有没(.*)?)",
+          fnc: "bro"
+        }
+      ]
+    })
   }
 
-  huifu(e) {
-    // 实现随机回复逻辑
-    let ID = e.group_id;
-    Bot.pickGroup(ID).sendMsg('有的兄弟，有的');
+  async bro() {
+    this.reply('有的兄弟，有的')
+    return false
   }
 }
