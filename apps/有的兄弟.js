@@ -15,7 +15,7 @@ export class Bro extends plugin {
       ]
     })
     this.config = Cfg.getConfig('config');
-    this.switch = this.config?.bro || "true";
+    this.switch = this.config?.bro || true;
   }
 
   async bro() {
