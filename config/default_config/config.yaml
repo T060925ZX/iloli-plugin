@@ -62,6 +62,7 @@ onebot_emoji_fixedEmojiId: 66
 ai_life_model: deepseek
 
 # Lolicon配置
+pixiv_enable: true
 pixiv_CD: 30
 pixiv_proxy: 'i.pixiv.re'
 pixiv_proxyAddress: ''

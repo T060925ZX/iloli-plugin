@@ -37,6 +37,7 @@ export class LoliconAPI extends plugin {
                 log: false
             }]
         })
+    this.switch = config?.pixiv_enable || true;
     }
 
     /** 清除CD */
@@ -65,6 +66,8 @@ export class LoliconAPI extends plugin {
         successCount = 0,
         failureCount = 0
     ) {
+        if (!this.switch) return false
+
         /**
          * 初始化代理（兼容7.0.x和5.0.x
          * @param {String} proxyAddress - 代理地址
