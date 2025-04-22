@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Cfg from '../model/Cfg.js'
 
 export class HumanLanguage extends plugin {
   constructor() {
