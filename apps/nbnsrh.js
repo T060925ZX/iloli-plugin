@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Cfg from '../model/Cfg.js'
 
 export class HumanLanguage extends plugin {
   constructor() {
@@ -14,9 +15,8 @@ export class HumanLanguage extends plugin {
         }
       ]
     })
-
-    // 默认开启
-    this.switch = true
+    this.config = Cfg.getConfig('config');
+    this.switch = this.config?.bro || true;
   }
 
   async translateAbbreviation() {
