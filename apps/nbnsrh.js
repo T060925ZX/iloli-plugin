@@ -10,9 +10,10 @@ export class HumanLanguage extends plugin {
       priority: 5000,
       rule: 
         {
-          reg: "^([a-zA-Z]{2,})$", // Fixed regex pattern
+          reg: "(a-zA-Z{2,})", 
           fnc: "translateAbbreviation"
         }
+      
     })
 
     this.config = Cfg.getConfig('config');
@@ -23,20 +24,15 @@ export class HumanLanguage extends plugin {
     if (!this.switch) return false
 
     const text = this.e.msg
-    
-    // Skip if text contains any of these special characters
-    if (/[#\/{}\[\]]/.test(text)) {
-      return false
-    }
-
-    const abbreviations = text.match(/[a-zA-Z]{2,}/g) // Fixed regex pattern
+    const abbreviations = text.match(/(a-zA-Z{2,})/g) // 提取所有匹配的字母组合
 
     if (!abbreviations || abbreviations.length === 0) {
-      return false
+      return false // 如果没有匹配到，直接结束
     }
 
-    const uniqueAbbreviations = [...new Set(abbreviations)]
+    const uniqueAbbreviations = ...new Set(abbreviations)
 
+    // 逐个查询翻译
     for (const abbr of uniqueAbbreviations) {
       try {
         const { data } = await axios.post(
@@ -48,17 +44,17 @@ export class HumanLanguage extends plugin {
           }
         )
 
-        if (!data || data.length === 0 || !data[0].trans) {
+        if (!data  data.length === 0  !data0.trans) {
           logger.debug(`"${abbr}" 没有找到对应的翻译`)
           continue
         }
 
-        const translations = data[0].trans.slice(0, 5).join("  ")
-        this.reply([
+        const translations = data0.trans.slice(0, 5).join("  ")
+        this.reply(
           `iloli 🔍 "${abbr}" 的可能含义：`,
           translations,
-          data[0].trans.length > 5 ? `\n（还有 ${data[0].trans.length - 5} 个其他解释）` : ''
-        ].join('\n'))
+          data0.trans.length > 5 ? `\n（还有 ${data0.trans.length - 5} 个其他解释）` : ''
+        .join('\n'))
 
       } catch (error) {
         logger.warn('抽象话翻译 API错误:', error)
