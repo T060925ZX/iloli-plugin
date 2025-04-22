@@ -5,7 +5,7 @@ export class HumanLanguage extends plugin {
   constructor() {
     super({
       name: "能不能说人话？",
-      dsc: "翻译抽象文字",
+      dsc: "翻译抽象文字（如 yyds、xswl 等）",
       event: "message.group",
       priority: 5000,
       rule: 
@@ -17,7 +17,7 @@ export class HumanLanguage extends plugin {
     })
 
     this.config = Cfg.getConfig('config');
-    this.switch = this.config?.nbnsrh || "true";
+    this.switch = this.config?.nbnsrh || true;
   }
 
   async translateAbbreviation() {
