@@ -5,14 +5,15 @@ export class HumanLanguage extends plugin {
   constructor() {
     super({
       name: "能不能说人话？",
-      dsc: "翻译抽象文字",
+      dsc: "翻译抽象文字（如 yyds、xswl 等）",
       event: "message.group",
       priority: 5000,
-      rule: 
+      rule: [
         {
-          reg: "([a-zA-Z]{2,})", 
+          reg: "([a-zA-Z]{2,})", // 匹配任意位置的 2+ 字母组合
           fnc: "translateAbbreviation"
         }
+      ]
     })
 
     this.config = Cfg.getConfig('config');
@@ -29,7 +30,8 @@ export class HumanLanguage extends plugin {
       return false // 如果没有匹配到，直接结束
     }
 
-    const uniqueAbbreviations = [...new Set(abbreviations)] // Fixed spread operator syntax
+    // 去重，避免重复翻译同一个缩写
+    const uniqueAbbreviations = [...new Set(abbreviations)]
 
     // 逐个查询翻译
     for (const abbr of uniqueAbbreviations) {
@@ -44,20 +46,20 @@ export class HumanLanguage extends plugin {
         )
 
         if (!data || data.length === 0 || !data[0].trans) {
-          logger.debug(`"${abbr}" 没有找到对应的翻译`)
+          this.reply(`"${abbr}" 没有找到对应的翻译`)
           continue
         }
 
-        const translations = data[0].trans.slice(0, 5).join("  ")
-        this.reply(
-          `iloli 🔍 "${abbr}" 的可能含义：\n` +
-          translations +
-          (data[0].trans.length > 5 ? `\n（还有 ${data[0].trans.length - 5} 个其他解释）` : '')
-        )
+        const translations = data[0].trans.slice(0, 5).join("、")
+        this.reply([
+          `🔍 "${abbr}" 的可能含义：`,
+          translations,
+          data[0].trans.length > 5 ? `\n（还有 ${data[0].trans.length - 5} 个其他解释）` : ''
+        ].join('\n'))
 
       } catch (error) {
-        logger.warn('抽象话翻译 API错误:', error)
-        logger.error(`"${abbr}" 翻译失败，可能是网络问题`)
+        console.error('[抽象话翻译] API错误:', error)
+        this.reply(`"${abbr}" 翻译失败，可能是网络问题`)
       }
     }
 
