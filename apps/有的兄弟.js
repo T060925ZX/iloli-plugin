@@ -11,6 +11,10 @@ export class Bro extends plugin {
         {
           reg: "((.*)?有(.*)?(吗|嘛)(.*)?|(.*)?有没(.*)?)",
           fnc: "bro"
+        },
+        {
+          reg: "(.*)?能(.*)?(吗|嘛)(.*)?",
+          fnc: "canDo"
         }
       ]
     })
@@ -21,7 +25,20 @@ export class Bro extends plugin {
   async bro() {
     if (!this.switch) return false
     
-    this.reply('有的兄弟，有的')
+    this.reply('有的兄弟，有的', quote = true )
+    return false
+  }
+
+  async canDo() {
+    if (!this.switch) return false
+    
+    const match = this.e.msg.match(/能(.*?)(吗|嘛)/);
+    if (match && match[1]) {
+      const action = match[1].trim();
+      this.reply(`包${action}的`, quote = true);
+    } else {
+      this.reply('包的', quote = true);
+    }
     return false
   }
 }

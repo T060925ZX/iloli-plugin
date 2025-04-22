@@ -72,7 +72,7 @@ export class AILifeSimulator extends plugin {
         }
 
         if (!this.apiKey) {
-            logger.error(`未配置${this.modelType} API密钥！`);
+            // logger.error(`未配置${this.modelType} API密钥！`);
         }
 
         this.stages = [
