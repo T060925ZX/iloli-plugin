@@ -5,15 +5,14 @@ export class HumanLanguage extends plugin {
   constructor() {
     super({
       name: "能不能说人话？",
-      dsc: "翻译抽象文字（如 yyds、xswl 等）",
+      dsc: "翻译抽象文字",
       event: "message.group",
       priority: 5000,
       rule: 
         {
-          reg: "(a-zA-Z{2,})", 
+          reg: "([a-zA-Z]{2,})", 
           fnc: "translateAbbreviation"
         }
-      
     })
 
     this.config = Cfg.getConfig('config');
@@ -24,13 +23,13 @@ export class HumanLanguage extends plugin {
     if (!this.switch) return false
 
     const text = this.e.msg
-    const abbreviations = text.match(/(a-zA-Z{2,})/g) // 提取所有匹配的字母组合
+    const abbreviations = text.match(/([a-zA-Z]{2,})/g) // 提取所有匹配的字母组合
 
     if (!abbreviations || abbreviations.length === 0) {
       return false // 如果没有匹配到，直接结束
     }
 
-    const uniqueAbbreviations = ...new Set(abbreviations)
+    const uniqueAbbreviations = [...new Set(abbreviations)] // Fixed spread operator syntax
 
     // 逐个查询翻译
     for (const abbr of uniqueAbbreviations) {
@@ -44,17 +43,17 @@ export class HumanLanguage extends plugin {
           }
         )
 
-        if (!data  data.length === 0  !data0.trans) {
+        if (!data || data.length === 0 || !data[0].trans) {
           logger.debug(`"${abbr}" 没有找到对应的翻译`)
           continue
         }
 
-        const translations = data0.trans.slice(0, 5).join("  ")
+        const translations = data[0].trans.slice(0, 5).join("  ")
         this.reply(
-          `iloli 🔍 "${abbr}" 的可能含义：`,
-          translations,
-          data0.trans.length > 5 ? `\n（还有 ${data0.trans.length - 5} 个其他解释）` : ''
-        .join('\n'))
+          `iloli 🔍 "${abbr}" 的可能含义：\n` +
+          translations +
+          (data[0].trans.length > 5 ? `\n（还有 ${data[0].trans.length - 5} 个其他解释）` : '')
+        )
 
       } catch (error) {
         logger.warn('抽象话翻译 API错误:', error)
