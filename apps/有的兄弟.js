@@ -1,3 +1,5 @@
+import Cfg from '../model/Cfg.js'
+
 export class Bro extends plugin {
   constructor() {
     super({
@@ -12,9 +14,13 @@ export class Bro extends plugin {
         }
       ]
     })
+    this.config = Cfg.getConfig('config');
+    this.switch = this.config?.bro || "true";
   }
 
   async bro() {
+    if (!this.switch) return false
+    
     this.reply('有的兄弟，有的')
     return false
   }
