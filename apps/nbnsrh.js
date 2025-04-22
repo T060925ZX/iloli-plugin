@@ -5,7 +5,7 @@ export class HumanLanguage extends plugin {
   constructor() {
     super({
       name: "能不能说人话？",
-      dsc: "翻译抽象文字（如 yyds、xswl 等）",
+      dsc: "翻译抽象文字",
       event: "message.group",
       priority: 5000,
       rule: 
