@@ -35,7 +35,7 @@ export class Bro extends plugin {
     const match = this.e.msg.match(/能(.*?)(吗|嘛)/);
     if (match && match[1]) {
       const action = match[1].trim();
-      this.reply(`包${action}的`, { quote: true, at: false }); 
+      this.reply(`包能${action}的`, { quote: true, at: false }); 
     } else {
       this.reply('包的', { quote: true, at: false }); 
     }
