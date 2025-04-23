@@ -24,8 +24,9 @@ export class Bro extends plugin {
 
   async bro() {
     if (!this.switch) return false
-    
-    this.reply('有的兄弟，有的', { quote: true, at: false });
+
+    await Bot.pickGroup(this.e.group_id).sendMsg('有的兄弟，有的', { quote: true, at: false });
+
     return false;
   }
 
@@ -35,9 +36,9 @@ export class Bro extends plugin {
     const match = this.e.msg.match(/能([\u4e00-\u9fa5a-zA-Z0-9])/);
     if (match && match[1]) {
       const word = match[1]; 
-      this.reply(`包能${word}的`, { quote: true, at: false });
+    await Bot.pickGroup(this.e.group_id).sendMsg('包能${word}的', { quote: true, at: false });
     } else {
-      this.reply('包的', { quote: true, at: false });
+    await Bot.pickGroup(this.e.group_id).sendMsg('包的', { quote: true, at: false });
     }
     return false;
   }
