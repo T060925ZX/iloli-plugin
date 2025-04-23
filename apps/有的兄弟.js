@@ -36,7 +36,7 @@ export class Bro extends plugin {
     const match = this.e.msg.match(/能([\u4e00-\u9fa5a-zA-Z0-9])/);
     if (match && match[1]) {
       const word = match[1]; 
-    await Bot.pickGroup(this.e.group_id).sendMsg('包能${word}的');
+    await Bot.pickGroup(this.e.group_id).sendMsg(`包能${word}的`);
     } else {
     await Bot.pickGroup(this.e.group_id).sendMsg('包的');
     }
