@@ -25,6 +25,8 @@ export default class Button {
         ], [
             { text: "戳他", input: `戳他` },
             { text: "留言", input: `#留言` },
+        ], [
+            { text: "答案之书", input: `#答案之书` },
         ])
     }
 
@@ -37,4 +39,9 @@ export default class Button {
         ])
     }
 
+    answer_book() {
+        return segment.button([
+            { text: "答案之书", input: `#答案之书` },
+        ])
+    }
 }
