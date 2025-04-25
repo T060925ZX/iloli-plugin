@@ -17,20 +17,11 @@ function getVersion() {
   }
 }
 
-// 需要强制同步的配置文件列表
-const FORCE_SYNC_FILES = ['chuo.yaml'] 
-
 // 初始化配置文件
 function initConfig() {
   const configDir = path.join(__dirname, 'config')
   const defaultConfigDir = path.join(configDir, 'default_config')
-  const result = { 
-    new: 0, 
-    existing: 0, 
-    forced: 0, 
-    forcedFiles: {}, // 记录每个强制同步文件的详细状态
-    otherFiles: { new: 0, existing: 0 } // 其他文件的统计
-  }
+  const result = { new: 0, existing: 0 }
 
   try {
     // 确保配置目录存在
@@ -45,72 +36,41 @@ function initConfig() {
       return result
     }
 
-    // 处理强制同步文件
-    for (const file of FORCE_SYNC_FILES) {
-      const source = path.join(defaultConfigDir, file)
-      const target = path.join(configDir, file)
-
-      if (fs.existsSync(source)) {
-        fs.copyFileSync(source, target) // 强制覆盖
-        result.forced++
-        result.forcedFiles[file] = 'success'
-        logger.debug(`[iloli插件] 已强制同步配置: ${file}`)
-      } else {
-        result.forcedFiles[file] = 'missing'
-        logger.warn(`[iloli插件] 默认配置中缺少强制同步文件: ${file}`)
-      }
-    }
-
-    // 遍历其他默认配置文件（非强制同步）
+    // 遍历默认配置目录下的所有配置文件
     const defaultConfigs = fs.readdirSync(defaultConfigDir)
-      .filter(file => ['.yaml', '.yml', '.json'].includes(path.extname(file)) && 
-                      !FORCE_SYNC_FILES.includes(file))
+      .filter(file => ['.yaml', '.yml', '.json'].includes(path.extname(file)))
 
     if (defaultConfigs.length === 0) {
-      logger.warn('[iloli插件] 默认配置目录中没有找到其他配置文件');
-      return result;
+      logger.warn('[iloli插件] 默认配置目录中没有找到配置文件')
+      return result
     }
 
-    // 复制其他配置文件（仅当目标不存在时）
+    // 复制每个配置文件
     defaultConfigs.forEach(file => {
       const source = path.join(defaultConfigDir, file)
       const target = path.join(configDir, file)
 
+      // 只复制不存在的配置文件
       if (!fs.existsSync(target)) {
         fs.copyFileSync(source, target)
-        result.otherFiles.new++
+        result.new++
         logger.debug(`[iloli插件] 已复制默认配置: ${file}`)
       } else {
-        result.otherFiles.existing++
+        result.existing++
       }
     })
 
-    // 合并统计
-    result.new = result.otherFiles.new
-    result.existing = result.otherFiles.existing
-
-    // 输出统计信息
-    if (result.forced > 0) {
-      logger.mark(`[iloli插件] 已强制同步 ${result.forced} 个配置文件`);
-      Object.entries(result.forcedFiles).forEach(([file, status]) => {
-        if (status === 'success') {
-          logger.debug(`[iloli插件]   ✓ ${file}`);
-        } else {
-          logger.warn(`[iloli插件]   ⚠ 缺少: ${file}`);
-        }
-      });
-    }
     if (result.new > 0) {
-      logger.mark(`[iloli插件] 已初始化 ${result.new} 个新配置文件`);
+      logger.mark(`[iloli插件] 已初始化 ${result.new} 个新配置文件`)
     }
     if (result.existing > 0) {
-      logger.mark(`[iloli插件] 跳过 ${result.existing} 个已存在的配置文件`);
+      logger.mark(`[iloli插件] 跳过 ${result.existing} 个已存在的配置文件`)
     }
 
-    return result;
+    return result
   } catch (err) {
-    logger.error('[iloli插件] 配置初始化失败:', err);
-    return result;
+    logger.error('[iloli插件] 配置初始化失败:', err)
+    return result
   }
 }
 
@@ -149,6 +109,8 @@ async function loadApps() {
     }
 
     const duration = Date.now() - startTime
+    // logger.mark(`[iloli插件] 加载完成，成功 ${result.success} 个，失败 ${result.failed} 个，耗时 ${logger.green(duration + 'ms')}`)
+    
     return { ...result, duration }
   } catch (err) {
     logger.error('[iloli插件] 加载过程出错:', err)
@@ -161,7 +123,7 @@ function printBanner(version, config, modules) {
   const line = '='.repeat(38)
   const content = [
     `           iloli-plugin v${version}`,
-    `    ✓ 配置: ${config.new}个新初始化 | ${config.existing}个已存在 | 强制同步: ${config.forced}个`,
+    `    ✓ 配置: ${config.new}个新初始化 | ${config.existing}个已存在`,
     `    ✓ 模块: 成功加载 ${modules.success}个 | 失败 ${modules.failed}个`,
     `            ⏱️ 总耗时: ${modules.duration}ms`
   ].join('\n')
@@ -184,12 +146,5 @@ async function initialize() {
 }
 
 // 执行初始化并导出
-try {
-  const { version, apps } = await initialize()
-  export { version, apps }
-} catch (err) {
-  logger.error('[iloli插件] 初始化失败，无法导出:', err)
-  // 确保即使初始化失败也能导出基本结构
-  export const version = '0.0.0'
-  export const apps = {}
-}
+const { version, apps } = await initialize()
+export { version, apps }
