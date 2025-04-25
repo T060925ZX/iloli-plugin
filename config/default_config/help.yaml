@@ -12,6 +12,9 @@
     - icon: 'paimon'
       title: '来n份xx涩图'
       desc: '涩图 xx为标签'
+    - icon: 'paimon'
+      title: '#答案之书'
+      desc: '向答案之书提问'
 - group: 'AI功能'
   list:
     - icon: 'paimon'
