@@ -13,9 +13,7 @@ export class moyu extends plugin {
             fnc: "moyu"
           }
         ]
-      });
-      
-      // 这些初始化代码应该放在构造函数的主体内
+      })
       this.config = Cfg.getConfig('api');
       this.moyu = this.config?.moyu || 'https://api.vvhan.com/api/moyu';
     }
