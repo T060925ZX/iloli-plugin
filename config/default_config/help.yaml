@@ -15,6 +15,9 @@
     - icon: 'paimon'
       title: '#答案之书'
       desc: '向答案之书提问'
+    - icon: 'paimon'
+      title: '摸鱼日历'
+      desc: '今天也要摸会鱼'
 - group: 'AI功能'
   list:
     - icon: 'paimon'
