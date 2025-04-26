@@ -14,11 +14,18 @@ export class moyu extends plugin {
           }
         ]
       });
-    this.config = Cfg.getConfig('api');
-    this.moyu = this.config?.moyu || 'https://api.vvhan.com/api/moyu';
+      
+      // 这些初始化代码应该放在构造函数的主体内
+      this.config = Cfg.getConfig('api');
+      this.moyu = this.config?.moyu || 'https://api.vvhan.com/api/moyu';
     }
-  
-    async moyu(e) {
-        await this.reply(segment.image(this.moyu))
-  }
+
+  async moyu(e) {
+    try {
+        await this.reply(segment.image(this.config));
+    } catch (error) {
+        await this.reply('获取摸鱼图片失败');
+    }
+}
+
 }
