@@ -27,6 +27,7 @@ export default class Button {
             { text: "留言", input: `#留言` },
         ], [
             { text: "答案之书", input: `#答案之书` },
+            { text: "摸鱼日历", input: `#摸鱼日历` },
         ])
     }
 
