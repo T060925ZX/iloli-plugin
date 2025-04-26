@@ -1,6 +1,6 @@
 import Cfg from '../model/Cfg.js'
 
-export class RecallReply extends plugin {
+export class moyu extends plugin {
     constructor() {
       super({
         name: "摸鱼日历",
