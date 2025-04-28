@@ -1,5 +1,5 @@
 const userCooldowns = new Map();
-
+ 
 export class MutualDestruction extends plugin {
   constructor() {
     super({
