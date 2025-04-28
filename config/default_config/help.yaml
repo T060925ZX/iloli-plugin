@@ -18,6 +18,12 @@
     - icon: 'paimon'
       title: '摸鱼日历'
       desc: '今天也要摸会鱼'
+    - icon: 'paimon'
+      title: '#天选之人'
+      desc: '随机抽取禁言'
+    - icon: 'paimon'
+      title: '#同归于尽'
+      desc: '与对方同归于尽'
 - group: 'AI功能'
   list:
     - icon: 'paimon'
