@@ -13,7 +13,7 @@ export class MutualDestruction extends plugin {
           fnc: "mutualDestruction"
         }
       ]
-    }); 
+    });
   }
 
   async mutualDestruction(e) {
@@ -34,8 +34,13 @@ export class MutualDestruction extends plugin {
       const botIsOwner = group.is_owner;
       const botIsAdmin = group.is_admin;
 
+      if (!botIsAdmin && !botIsOwner) {
+        await e.reply("❌ 机器人需要管理员或群主权限才能执行禁言");
+        return;
+      }
+
       // 获取发起人权限
-      const sender = e.group.pickMember(e.user_id);
+      const sender = await e.group.getMember(e.user_id);
       const senderIsOwner = sender?.is_owner;
       const senderIsAdmin = sender?.is_admin;
 
@@ -53,11 +58,15 @@ export class MutualDestruction extends plugin {
       }
 
       // 获取目标成员信息
-      const targetMember = e.group.pickMember(targetId);
+      const targetMember = await e.group.getMember(targetId);
       if (!targetMember) {
         await e.reply("❌ 找不到目标用户", { quote: true });
         return;
       }
+
+      // 获取目标权限
+      const targetIsAdmin = targetMember.is_admin;
+      const targetIsOwner = targetMember.is_owner;
 
       // 获取目标昵称
       let targetName = targetMember.card || targetMember.nickname || targetId;
@@ -72,19 +81,43 @@ export class MutualDestruction extends plugin {
       // 根据权限决定执行逻辑
       let resultMsg = "";
       
-      // 情况1：发起人是群主
-      if (senderIsOwner) {
+      // 情况1：双方都是管理员 - 随机逻辑
+      if (senderIsAdmin && targetIsAdmin) {
+        const random = Math.random();
+        const resultType = random < 0.34 ? "both" : random < 0.67 ? "self" : "target";
+
+        switch (resultType) {
+          case "both":
+            await Promise.all([
+              e.group.muteMember(e.user_id, muteTime),
+              e.group.muteMember(targetId, muteTime)
+            ]);
+            resultMsg = `⚔️ 管理员对决！\n你和 ${targetName} 一起被禁言 ${showTime}`;
+            break;
+            
+          case "self":
+            await e.group.muteMember(e.user_id, muteTime);
+            resultMsg = `😵 管理员内战！\n你被禁言 ${showTime}\n${targetName} 安然无恙`;
+            break;
+            
+          case "target":
+            await e.group.muteMember(targetId, muteTime);
+            resultMsg = `🎯 管理员对决！\n${targetName} 被禁言 ${showTime}\n你毫发无伤`;
+            break;
+        }
+      }
+      // 情况2：发起人是群主
+      else if (senderIsOwner) {
         await e.group.muteMember(targetId, muteTime);
         resultMsg = `👑 群主制裁！\n${targetName} 被禁言 ${showTime}`;
       } 
-      // 情况2：发起人是管理员且机器人是管理员
+      // 情况3：发起人是管理员且机器人是管理员
       else if (senderIsAdmin && botIsAdmin) {
         await e.group.muteMember(targetId, muteTime);
         resultMsg = `🛡️ 管理员执行！\n${targetName} 被禁言 ${showTime}`;
       }
-      // 情况3：机器人是群主，正常随机逻辑
+      // 情况4：机器人是群主，正常随机逻辑
       else if (botIsOwner) {
-        // 随机结果 (34%一起禁言,33%自己死,33%对方死)
         const random = Math.random();
         const resultType = random < 0.34 ? "both" : random < 0.67 ? "self" : "target";
 
@@ -108,9 +141,9 @@ export class MutualDestruction extends plugin {
             break;
         }
       }
-      // 情况4：无权限
+      // 情况5：无权限
       else {
-        await e.reply("❌ 没有足够的权限使用此功能", { quote: true });
+        await e.reply("❌ 你没有足够的权限使用此功能", { quote: true });
         return;
       }
 
