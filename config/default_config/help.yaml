@@ -22,8 +22,11 @@
       title: '#天选之人'
       desc: '随机抽取禁言'
     - icon: 'paimon'
-      title: '#同归于尽'
+      title: '#同归于尽(暂不可用)'
       desc: '与对方同归于尽'
+    - icon: 'paimon'
+      title: '#活字乱刷xx'
+      desc: '合成鬼畜音频，仅中文'
 - group: 'AI功能'
   list:
     - icon: 'paimon'

@@ -13,6 +13,7 @@
     "yaml": "*",
     "js-yaml": "*",
     "sharp": "*",
+    "chinese-to-pinyin": "*",
     "axios": "*"
   }
 }
