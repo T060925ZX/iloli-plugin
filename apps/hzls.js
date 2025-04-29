@@ -12,6 +12,20 @@ if (!fs.existsSync(tempDir)) {
     fs.mkdirSync(tempDir, { recursive: true });
 }
 
+// 数字转中文映射
+const numberToChinese = {
+  '0': '零',
+  '1': '一',
+  '2': '二',
+  '3': '三',
+  '4': '四',
+  '5': '五',
+  '6': '六',
+  '7': '七',
+  '8': '八',
+  '9': '九'
+};
+
 export class HuoZiLuanShua extends plugin {
   constructor() {
     super({
@@ -43,8 +57,11 @@ export class HuoZiLuanShua extends plugin {
       // 创建文件锁防止并发冲突
       lockFileHandle = await fs.promises.open(lockFile, 'wx');
       
-      const text = e.msg.replace(/^#活字乱刷/, '').trim();
+      let text = e.msg.replace(/^#活字乱刷/, '').trim();
       if (!text) return e.reply('请输入要转换的内容');
+
+      // 预处理文本：移除符号 + 数字转中文
+      text = this.preprocessText(text);
 
       // 中文转拼音
       const pinyinText = pkg(text, { removeTone: true });
@@ -79,7 +96,7 @@ export class HuoZiLuanShua extends plugin {
       this.safeUnlink(listFile);
       fs.writeFileSync(listFile, listContent);
 
-      // 执行FFmpeg（高质量音频处理）
+      // 执行FFmpeg
       await this.executeFFmpeg(listFile, outputFile);
 
       // 验证并发送语音
@@ -104,30 +121,25 @@ export class HuoZiLuanShua extends plugin {
     }
   }
 
+  // 文本预处理：移除符号 + 数字转中文
+  preprocessText(text) {
+    // 移除所有标点符号（保留中文字符和数字）
+    let cleaned = text.replace(/[^\u4e00-\u9fa50-9]/g, '');
+    
+    // 将数字转换为中文
+    return cleaned.split('').map(char => 
+      numberToChinese[char] || char
+    ).join('');
+  }
+
   async executeFFmpeg(listFile, outputFile, retry = 2) {
     return new Promise((resolve, reject) => {
-      console.log(`开始音频合成: ${listFile} -> ${outputFile}`);
-      
-      const startTime = Date.now();
-      const timeout = setTimeout(() => {
-        process.kill(ffmpegProcess.pid, 'SIGKILL');
-        reject(new Error('FFmpeg执行超时(30秒)'));
-      }, 30000);
-
-      // 高质量音频处理参数
       const ffmpegProcess = exec(
         `ffmpeg -y -f concat -safe 0 -i "${listFile}" ` +
-        `-af "aresample=async=1000,highpass=f=50,lowpass=f=8000" ` +
-        `-c:a libmp3lame -q:a 0 -joint_stereo 1 "${outputFile}"`,
-        async (err, stdout, stderr) => {
-          clearTimeout(timeout);
+        `-c:a libmp3lame -q:a 2 "${outputFile}"`,
+        async (err) => {
           this.safeUnlink(listFile);
-          
-          console.log(`FFmpeg耗时: ${(Date.now() - startTime)/1000}秒`);
-          if (stderr) console.error('FFmpeg输出:', stderr);
-
           if (err && retry > 0) {
-            console.log(`FFmpeg失败，剩余重试次数：${retry}`);
             await new Promise(r => setTimeout(r, 1000));
             return this.executeFFmpeg(listFile, outputFile, retry - 1)
               .then(resolve)
@@ -139,7 +151,6 @@ export class HuoZiLuanShua extends plugin {
     });
   }
 
-  // 安全删除文件
   safeUnlink(file) {
     try {
       if (fs.existsSync(file)) fs.unlinkSync(file);
@@ -148,20 +159,14 @@ export class HuoZiLuanShua extends plugin {
     }
   }
 
-  // 路径转义
   escapePath(p) {
     return p.replace(/'/g, "'\\''");
   }
 
-  // 音频文件验证
   async validateAudio(file) {
     return new Promise((resolve) => {
       fs.access(file, fs.constants.R_OK, (err) => {
-        if (err) return resolve(false);
-        
-        exec(`ffprobe -v error -show_format "${file}"`, (err) => {
-          resolve(!err);
-        });
+        resolve(!err);
       });
     });
   }
