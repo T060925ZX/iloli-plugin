@@ -46,6 +46,11 @@ pnpm install --filter=iloli-plugin
 - [x] 人生模拟器
 - [x] 获取某某人的QQ主页详细信息
 - [x] 随机超能力
+- [x] 活字乱刷术
+- [x] 天选之人（随机禁言）
+- [x] 留言
+- [x] 来份涩图
+- [x] 清屏
 
 <div align="left"> 
   
