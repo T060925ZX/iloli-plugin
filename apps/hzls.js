@@ -123,7 +123,7 @@ export class HuoZiLuanShua extends plugin {
           clearTimeout(timeout);
           this.safeUnlink(listFile);
           
-          console.log(`FFmpeg耗时: ${((Date.now() - startTime)/1000}秒`);
+          console.log(`FFmpeg耗时: ${(Date.now() - startTime)/1000}秒`);
           if (stderr) console.error('FFmpeg输出:', stderr);
 
           if (err && retry > 0) {
