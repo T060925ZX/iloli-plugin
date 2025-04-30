@@ -128,3 +128,12 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# 自定义忽略规则
+data/
+temp/
+# 忽略 config 目录下所有内容
+config/*
+# 但不忽略 default_config 目录及其内容
+!config/default_config/
+!config/default_config/**
