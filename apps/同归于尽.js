@@ -21,7 +21,7 @@ export class MutualDestruction extends plugin {
       // 检查CD
       const now = Date.now();
       const lastUsed = userCooldowns.get(e.user_id);
-      const cooldownTime = 2 * 60 * 1000; // 2分钟CD（毫秒）
+      const cooldownTime = 25 * 60 * 1000; // 2分钟CD（毫秒）
       
       if (lastUsed && now - lastUsed < cooldownTime) {
         const remaining = Math.ceil((cooldownTime - (now - lastUsed)) / 1000);
