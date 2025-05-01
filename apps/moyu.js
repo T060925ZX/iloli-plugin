@@ -36,7 +36,7 @@ export class moyu extends plugin {
 
     async get60sImage(e) {
         try {
-            await this.reply(segment.image(this.moyuApi), { quote: true , at: false });
+            await this.reply(segment.image(this.mrApi), { quote: true , at: false });
         } catch (error) {
             console.error("获取日报图片失败:", error);
             await this.reply("API请求出错啦~");
