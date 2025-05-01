@@ -275,7 +275,7 @@ const preRenderHelp = async () => {
   fs.writeFileSync(htmlPath, htmlContent);
 
   const screenshotConfig = {
-    width: null,
+    width: 1240,
     height: null,
     quality: 100,
     type: 'jpeg',
