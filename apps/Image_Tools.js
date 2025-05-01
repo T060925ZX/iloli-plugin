@@ -23,42 +23,31 @@ export class GifSpeedControl extends plugin {
       ]
     });
 
-    // 初始化时创建目录
     this.ensureDirExists(TEMP_DIR);
   }
 
-  /**
-   * 确保目录存在
-   */
   ensureDirExists(dirPath) {
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath, { recursive: true });
     }
   }
 
-  /**
-   * 处理GIF变速请求
-   */
   async processGifSpeed(e) {
     try {
-      // 1. 获取变速参数
       const speed = this.parseSpeedParam(e);
       if (speed === null) return;
 
-      // 2. 获取引用的GIF消息
-      const gifUrl = await this.getReferencedGifUrl(e);
-      if (!gifUrl) return;
-
-      // 3. 下载并处理GIF
-      const { originalPath, outputPath } = await this.processGif(gifUrl, speed);
-
-      // 4. 发送结果
-      await e.reply([segment.image(`file:///${outputPath}`)
-      ]);
-
-      // 5. 清理临时文件
-      this.scheduleCleanup([originalPath, outputPath]);
-
+      // 如果有引用消息
+      if (e.source) {
+        const gifUrl = await this.getReferencedGifUrl(e);
+        if (!gifUrl) return;
+        await this.processAndSendGif(gifUrl, speed, e);
+      } 
+      // 没有引用则设置上下文
+      else {
+        this.setContext('waitForGif');
+        e.reply('请直接发送要处理的GIF图片', false, { at: true });
+      }
     } catch (err) {
       console.error('GIF变速处理失败:', err);
       e.reply(`处理失败: ${err.message}`);
@@ -66,8 +55,36 @@ export class GifSpeedControl extends plugin {
   }
 
   /**
-   * 解析变速参数
+   * 上下文处理 - 等待用户发送GIF
    */
+  async waitForGif(e) {
+    try {
+      const gifUrl = this.extractGifUrl(e.message);
+      if (!gifUrl) {
+        return e.reply('未检测到GIF图片，请重新发送或取消操作');
+      }
+
+      const speedMatch = e.msg.match(/^#gif变速(\d+\.?\d*)x$/);
+      const speed = speedMatch ? parseFloat(speedMatch[1]) : 1.0; // 默认1倍速
+      
+      await this.processAndSendGif(gifUrl, speed, e);
+      this.finish('waitForGif');
+    } catch (err) {
+      console.error('上下文处理失败:', err);
+      e.reply(`处理失败: ${err.message}`);
+      this.finish('waitForGif');
+    }
+  }
+
+  /**
+   * 处理并发送GIF
+   */
+  async processAndSendGif(gifUrl, speed, e) {
+    const { originalPath, outputPath } = await this.processGif(gifUrl, speed);
+    await e.reply([segment.image(`file:///${outputPath}`)]);
+    this.scheduleCleanup([originalPath, outputPath]);
+  }
+
   parseSpeedParam(e) {
     const speedMatch = e.msg.match(/^#gif变速(\d+\.?\d*)x$/);
     if (!speedMatch) return null;
@@ -80,15 +97,7 @@ export class GifSpeedControl extends plugin {
     return speed;
   }
 
-  /**
-   * 获取引用的GIF URL
-   */
   async getReferencedGifUrl(e) {
-    if (!e.source) {
-      e.reply('请引用一条包含GIF的消息');
-      return null;
-    }
-
     const chatHistory = await e.group.getChatHistory(e.source.seq, 1);
     const referencedMsg = chatHistory[0];
     
@@ -104,9 +113,6 @@ export class GifSpeedControl extends plugin {
     return gifUrl;
   }
 
-  /**
-   * 处理GIF文件
-   */
   async processGif(gifUrl, speed) {
     const timestamp = Date.now();
     const originalPath = path.join(TEMP_DIR, `${timestamp}.gif`);
@@ -118,17 +124,25 @@ export class GifSpeedControl extends plugin {
     return { originalPath, outputPath };
   }
 
-  /**
-   * 从消息中提取GIF URL
-   */
   extractGifUrl(message) {
     try {
+      // 处理数组消息
       if (Array.isArray(message)) {
         const imageSeg = message.find(m => m.type === 'image');
-        return imageSeg?.url;
-      } else if (typeof message === 'string') {
-        const urlMatch = message.match(/\[CQ:image,file=.+?,url=(.+?)\]/);
-        return urlMatch?.[1];
+        if (imageSeg) {
+          // 检查是否为GIF（根据URL或文件扩展名）
+          if (imageSeg.url?.endsWith('.gif') || imageSeg.file?.endsWith('.gif')) {
+            return imageSeg.url || imageSeg.file;
+          }
+        }
+      } 
+      // 处理字符串消息
+      else if (typeof message === 'string') {
+        const urlMatch = message.match(/\[CQ:image,file=(.+?\.gif).+?url=(.+?)\]/);
+        if (urlMatch) return urlMatch[2];
+        
+        const fileMatch = message.match(/\[CQ:image,file=(.+?\.gif)/);
+        if (fileMatch) return fileMatch[1];
       }
     } catch (e) {
       console.error('提取GIF URL失败:', e);
@@ -136,9 +150,6 @@ export class GifSpeedControl extends plugin {
     return null;
   }
 
-  /**
-   * 下载GIF文件
-   */
   async downloadGif(url, savePath) {
     const writer = fs.createWriteStream(savePath);
     const response = await axios({
@@ -147,7 +158,6 @@ export class GifSpeedControl extends plugin {
       responseType: 'stream'
     });
 
-    // 文件大小限制检查
     let downloaded = 0;
     response.data.on('data', (chunk) => {
       downloaded += chunk.length;
@@ -165,9 +175,6 @@ export class GifSpeedControl extends plugin {
     });
   }
 
-  /**
-   * 使用FFmpeg改变GIF速度
-   */
   changeGifSpeed(inputPath, outputPath, speed) {
     return new Promise((resolve, reject) => {
       const cmd = `ffmpeg -i "${inputPath}" -vf "setpts=${1/speed}*PTS" -y "${outputPath}"`;
@@ -183,9 +190,6 @@ export class GifSpeedControl extends plugin {
     });
   }
 
-  /**
-   * 定时清理临时文件
-   */
   scheduleCleanup(filePaths) {
     setTimeout(() => {
       filePaths.forEach(file => {
