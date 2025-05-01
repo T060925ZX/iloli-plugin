@@ -10,7 +10,7 @@ const iconPath = path.join(pluginDir, 'resources', 'icon');
 const configPath = path.join(pluginDir, 'config', 'help_config.yaml');
 const yamlPath = path.join(pluginDir, 'config', 'default_config', 'help.yaml');
 import Button from '../model/Buttons.js';
-
+import { takeScreenshot } from '../model/takescreenshot.js';
 // 封装重新加载配置的函数
 const reloadConfig = () => {
   try {
@@ -285,41 +285,46 @@ const preRenderHelp = async () => {
   const htmlPath = path.join(tempDir, 'help.html');
   fs.writeFileSync(htmlPath, htmlContent);
 
-  // 使用 Puppeteer 渲染页面并截图
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: [
-      '--disable-gpu',
-      '--no-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-setuid-sandbox',
-      '--no-zygote',
-      '--disable-web-security',
-      '--allow-file-access-from-files'
-    ],
-  });
-
-  const page = await browser.newPage();
-  await page.goto(`file://${htmlPath}`, { waitUntil: 'networkidle0' });
-
-  // 设置视口大小
-  await page.setViewport({
-    width: 1240,
-    height: 520,
-    deviceScaleFactor: deviceScaleFactor
-  });
-
-  // 截图并保存
+  // 使用外部 takeScreenshot 方法渲染页面并截图
+  const htmlUrl = `file://${htmlPath}`;
   const screenshotPath = path.join(tempDir, 'help.png');
-  await page.screenshot({ path: screenshotPath, fullPage: true });
-
-  // 关闭浏览器
-  await browser.close();
-
-  // 计算数据的哈希值
+  
+  // 截图配置，可以根据需要调整参数
+      const screenshotConfig = {
+        width: null,                  // 截图宽度
+        height: null,                 // 截图高度
+        quality: 100,                 // JPEG图片质量(1-100)
+        type: 'jpeg',                 // 图片类型(jpeg, png)
+        deviceScaleFactor: deviceScaleFactor || 1, // 设备缩放比例
+        selector: null,               // 截取特定元素的CSS选择器
+        waitForSelector: null,        // 等待特定元素出现的CSS选择器
+        waitForTimeout: null,         // 等待固定时间(毫秒)
+        waitUntil: 'networkidle2',    // 页面加载完成条件
+        fullPage: false,              // 是否截取整个页面
+        topCutRatio: 0,               // 顶部裁剪比例
+        bottomCutRatio: 0,            // 底部裁剪比例
+        leftCutRatio: 0,              // 左侧裁剪比例
+        rightCutRatio: 0,             // 右侧裁剪比例
+        cacheTime: 3600,              // 缓存时间(秒)
+        emulateDevice: null,          // 模拟设备
+        userAgent: null,              // 自定义UA
+        timeout: 120000,              // 总超时时间
+        scrollToBottom: true,         // 是否滚动到底部
+        cookies: null,                // 自定义Cookie
+        allowFailure: true,           // 允许失败并返回默认图片
+        authentication: null,         // HTTP认证
+        clip: null,                   // 裁剪区域
+        omitBackground: false,        // 是否省略背景
+        encoding: 'binary',           // 图片编码
+        hideScrollbars: true,         // 隐藏滚动条
+        javascript: true,             // 是否启用JavaScript
+        dark: false,                  // 暗黑模式
+        retryCount: 2,                // 重试次数
+        retryDelay: 1000              // 重试间隔
+    };
+  // 调用外部截图方法
+  await takeScreenshot(htmlUrl, screenshotPath.replace(/\.png$/, ''), screenshotConfig);
   const dataHash = createHash('md5').update(JSON.stringify(helpData)).digest('hex');
-
-  // 保存哈希值到文件
   const hashPath = path.join(tempDir, 'help.hash');
   fs.writeFileSync(hashPath, dataHash);
 
