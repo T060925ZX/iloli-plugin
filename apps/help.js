@@ -11,8 +11,7 @@ const yamlPath = path.join(pluginDir, 'config', 'default_config', 'help.yaml');
 import { takeScreenshot } from '../model/takescreenshot.js';
 
 // 全局变量，定义截图路径
-let screenshotPath = path.join(tempDir, 'help.jpg');
-let helpPath = path.join(tempDir, 'help.jpg');
+let screenshotPath = path.join(tempDir, 'help.jpeg');
 
 // 封装重新加载配置的函数
 const reloadConfig = () => {
@@ -369,7 +368,11 @@ export class HelpPlugin extends plugin {
   }
 
   async showHelp(e) {
-      await e.reply([segment.image(helpPath)]);
+    if (fs.existsSync(screenshotPath)) {
+      await e.reply([segment.image(screenshotPath)]);
+    } else {
+      await e.reply('帮助图片未生成，请尝试刷新或稍后再试。');
+    }
   }
 
   async refreshHelp(e) {
