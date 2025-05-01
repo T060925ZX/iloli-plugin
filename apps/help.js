@@ -2,15 +2,12 @@ import { createHash } from 'crypto';
 import path from 'path';
 import fs from 'fs';
 import Cfg from '../model/Cfg.js';
+import { takeScreenshot } from '../model/takescreenshot.js';
 
 const pluginDir = path.resolve(process.cwd(), 'plugins/iloli-plugin');
 const tempDir = path.join(pluginDir, 'temp');
 const iconPath = path.join(pluginDir, 'resources', 'icon');
-const configPath = path.join(pluginDir, 'config', 'help_config.yaml');
-const yamlPath = path.join(pluginDir, 'config', 'default_config', 'help.yaml');
-import { takeScreenshot } from '../model/takescreenshot.js';
 
-// 全局变量，定义截图路径
 let screenshotPath = path.join(tempDir, 'help.jpeg');
 
 // 封装重新加载配置的函数

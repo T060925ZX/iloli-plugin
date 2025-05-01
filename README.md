@@ -28,6 +28,10 @@
 > ```bash
 > git clone https://gitproxy.click/https://github.com/T060925ZX/iloli-plugin.git ./plugins/iloli-plugin
 > ```
+> Gitcode源（更新较快）：
+> ```bash
+> git clone https://gitcode.com/T1602833550/iloli-plugin.git ./plugins/iloli-plugin
+> ```
 > Gitee源（更新较慢）：
 > ```bash
 > git clone https://gitee.com/T060925ZX/iloli-plugin.git ./plugins/iloli-plugin
