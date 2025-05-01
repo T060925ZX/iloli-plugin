@@ -31,7 +31,7 @@ const reloadConfig = () => {
       H1: 'iloli-plugin',
       H2: '帮助详情',
       columns: 3,
-      deviceScaleFactor: 1,
+      deviceScaleFactor: 2,
       yiyan: '种自己的花，爱自己的宇宙',
       bg: 'https://gitee.com/T060925ZX/iloli-plugin/raw/main/resources/image/nh.webp'
     };
