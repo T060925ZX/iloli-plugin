@@ -376,7 +376,7 @@ async function prepareScreenshotOptions(page, config) {
  * @returns {Promise<string>} 图片路径
  */
 export async function takeScreenshot(target, imageName, config = {}) {
-    const outputBasePath = path.join(process.cwd(), 'plugins/xrk-plugin/resources/help_other');
+    const outputBasePath = path.join(process.cwd(), 'plugins/iloli-plugin/resources/temp');
     
     // 确保输出目录存在
     if (!fs.existsSync(outputBasePath)) {
