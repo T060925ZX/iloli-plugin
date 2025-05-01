@@ -22,7 +22,7 @@ export class moyu extends plugin {
 
         this.config = Cfg.getConfig('api') || {};
         this.moyuApi = this.config.moyu || 'https://api.vvhan.com/api/moyu'; 
-        this.mrApi = this.config.moyu || 'http://zj.v.api.aa1.cn/api/60s-v2/?cc=SaDuck'; 
+        this.mrApi = this.config.mrApi || 'http://zj.v.api.aa1.cn/api/60s-v2/?cc=SaDuck'; 
     }
 
     async getMoyuImage(e) {
