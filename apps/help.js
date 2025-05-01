@@ -87,6 +87,21 @@ const generateHTML = () => {
     <head>
       <meta http-equiv="content-type" content="text/html;charset=utf-8" />
       <style>
+        /* 添加字体定义 */
+        @font-face {
+          font-family: 'HYWenHei';
+          src: url('file://${path.join(pluginDir, 'resources/font/HYWenHei-55W.ttf')}') format('truetype');
+          font-weight: normal;
+          font-style: normal;
+          font-display: swap;
+        }
+        
+        @font-face {
+          font-family: 'OPSans';
+          src: url('file://${path.join(pluginDir, 'resources/font/OPSans.woff2')}') format('woff2');
+          font-display: swap;
+        }
+
         body {
           overflow: -moz-scrollbars-none;
           -ms-overflow-style: none;
@@ -97,7 +112,7 @@ const generateHTML = () => {
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body {
           padding: 20px;
-          font-family: "OPSans";
+          font-family: 'OPSans', -apple-system, sans-serif;
           font-size: 16px;
           color: #1e1f20;
           transform: scale(1.5);
@@ -117,7 +132,7 @@ const generateHTML = () => {
         }
         .head_box {
           border-radius: 15px;
-          font-family: HYWenHei;
+          font-family: 'HYWenHei', "Microsoft YaHei", sans-serif;
           padding: 20px 15px;
           box-shadow: 0 5px 10px 0 rgb(0 0 0 / 15%);
           background: rgba(169, 169, 169, 0.1);
