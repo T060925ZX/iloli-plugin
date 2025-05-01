@@ -369,11 +369,7 @@ export class HelpPlugin extends plugin {
   }
 
   async showHelp(e) {
-    if (fs.existsSync(helpPath)) {
       await e.reply([segment.image(helpPath)]);
-    } else {
-      await e.reply('帮助图片未生成，请尝试刷新或稍后再试。');
-    }
   }
 
   async refreshHelp(e) {
