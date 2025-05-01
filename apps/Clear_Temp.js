@@ -24,7 +24,7 @@ export class TempCleaner extends plugin {
     // 获取插件目录下的 temp 文件夹
     this.tempDir = path.resolve(process.cwd(), 'plugins/iloli-plugin/temp');
     // 需要保留的文件列表
-    this.keepFiles = ['config.hash', 'help.hash', 'help.html', 'help.png'];
+    this.keepFiles = ['config.hash', 'help.hash', 'help.html', 'help.jpeg'];
   }
 
   async cleanTemp(e) {
@@ -111,8 +111,8 @@ export class TempCleaner extends plugin {
       '====== 缓存清理报告 ======',
       `✅ 已删除文件: ${report.filesDeleted} 个`,
       `💾 释放空间: ${spaceFreedMB} MB`,
-      `📁 保留文件: ${this.keepFiles.join(', ')}`,
-      `📂 所有文件夹结构已保留`,
+      // `📁 保留文件: ${this.keepFiles.join(', ')}`,
+      // `📂 所有文件夹结构已保留`,
     ];
 
     if (report.failedDeletions > 0) {
