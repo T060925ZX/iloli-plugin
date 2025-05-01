@@ -16,12 +16,12 @@ let screenshotPath = path.join(tempDir, 'help.png');
 // 封装重新加载配置的函数
 const reloadConfig = () => {
   try {
-    const config = Cfg.getConfig('config');
+    const config = Cfg.getConfig('help_config');
     return {
       H1: config.main_title || 'iloli-plugin',
       H2: config.sub_title || '帮助详情',
       columns: config.columns || 3,
-      deviceScaleFactor: config.deviceScaleFactor || 1,
+      deviceScaleFactor: config.deviceScaleFactor || 2,
       yiyan: config.default_hitokoto || '种自己的花，爱自己的宇宙',
       bg: config.background_image_url || 'https://gitee.com/T060925ZX/iloli-plugin/raw/main/resources/image/nh.webp'
     };
