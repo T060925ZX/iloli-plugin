@@ -81,7 +81,7 @@ export class HuoZiLuanShua extends plugin {
         throw new Error('生成的音频文件无效');
       }
     } catch (err) {
-      logger.error('[活字乱刷] 错误:', err.stack);
+      console.error('[活字乱刷] 错误:', err.stack);
       e.reply([
         '语音合成失败：',
         err.message,
@@ -97,81 +97,15 @@ export class HuoZiLuanShua extends plugin {
   }
 
   /**
-   * 检查缺失的语音文件，并尝试拆分拼音
+   * 检查缺失的语音文件
    */
   checkMissingFiles(pinyinArr) {
     const missing = [];
     pinyinArr.forEach(py => {
       const file = path.join(this.voiceDir, `${py}.wav`);
-      if (!fs.existsSync(file)) {
-        // 尝试拆分拼音
-        const splitSuccess = this.canSplitPinyin(py);
-        if (!splitSuccess) {
-          missing.push(py);
-        }
-      }
+      if (!fs.existsSync(file)) missing.push(py);
     });
     return missing;
-  }
-
-  /**
-   * 检查是否可以拆分拼音
-   */
-  canSplitPinyin(pinyin) {
-    const splitFiles = this.getSplitPinyinFiles(pinyin);
-    return splitFiles.length > 0;
-  }
-
-  /**
-   * 获取拆分后的拼音文件列表
-   */
-  getSplitPinyinFiles(pinyin) {
-    // 常见声母列表
-    const initials = ['b', 'p', 'm', 'f', 'd', 't', 'n', 'l', 'g', 'k', 'h', 
-                    'j', 'q', 'x', 'zh', 'ch', 'sh', 'r', 'z', 'c', 's'];
-    
-    // 尝试不同的拆分方式
-    const possibleSplits = [];
-    
-    // 1. 尝试常见声母+韵母组合
-    for (const initial of initials) {
-      if (pinyin.startsWith(initial)) {
-        const remaining = pinyin.slice(initial.length);
-        if (remaining) {
-          possibleSplits.push([initial, remaining]);
-        }
-      }
-    }
-    
-    // 2. 尝试两拼音节拆分（如 x-iao）
-    if (pinyin.length > 2) {
-      possibleSplits.push([
-        pinyin.substring(0, 1),
-        pinyin.substring(1)
-      ]);
-    }
-    
-    // 3. 尝试三拼音节拆分（如 q-i-ang）
-    if (pinyin.length > 3) {
-      possibleSplits.push([
-        pinyin.substring(0, 1),
-        pinyin.substring(1, 2),
-        pinyin.substring(2)
-      ]);
-    }
-
-    // 检查哪些拆分组合的文件都存在
-    for (const split of possibleSplits) {
-      const files = split.map(part => 
-        path.join(this.voiceDir, `${part}.wav`)
-      );
-      
-      if (files.every(f => fs.existsSync(f))) {
-        return files;
-      }
-    }
-    
-    return [];
   }
 
   /**
@@ -181,8 +115,7 @@ export class HuoZiLuanShua extends plugin {
     return e.reply([
       `缺少以下拼音文件：${missingFiles.join(', ')}`,
       `请将对应的.wav文件放入目录：`,
-      segment.file(this.voiceDir),
-      `\n或者提供拆分后的部分（如 nuo 需要 nu.wav 和 o.wav）`
+      segment.file(this.voiceDir)
     ]);
   }
 
@@ -197,30 +130,16 @@ export class HuoZiLuanShua extends plugin {
   }
 
   /**
-   * 生成最终的音频文件（支持拆分拼音）
+   * 生成最终的音频文件
    */
   async generateAudio(pinyinArr, outputFile) {
     // 清理已存在的文件
     safeUnlink(outputFile);
 
-    // 准备文件列表
-    const fileList = [];
-    for (const py of pinyinArr) {
-      const fullFile = path.join(this.voiceDir, `${py}.wav`);
-      if (fs.existsSync(fullFile)) {
-        fileList.push(fullFile);
-      } else {
-        // 尝试拆分拼音
-        const splitFiles = this.getSplitPinyinFiles(py);
-        if (splitFiles.length > 0) {
-          fileList.push(...splitFiles);
-        } else {
-          throw new Error(`无法找到拼音文件: ${py}.wav`);
-        }
-      }
-    }
-
-    // 添加结尾静音
+    // 准备文件列表（包含最后的静音）
+    const fileList = pinyinArr.map(py => 
+      path.join(this.voiceDir, `${py}.wav`)
+    );
     const silenceFile = generateSilenceFile(this.tempDir);
     
     // 创建临时列表文件
