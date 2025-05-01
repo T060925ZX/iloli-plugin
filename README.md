@@ -8,7 +8,7 @@
 
 - 主要是写着玩，菜勿喷
 
-- **使用中遇到问题请加 QQ 群咨询：[983299064](https://qm.qq.com/q/ciLUvOjDyw)  [1014823769](https://qm.qq.com/q/tkbstruiGI)**
+- **使用中遇到问题请加 QQ 群咨询： [1541572746](https://qm.qq.com/q/KlaHrIcyGc)  [983299064](https://qm.qq.com/q/ciLUvOjDyw)**
 
 ## 安装插件
 
@@ -17,13 +17,19 @@
     git clone https://github.com/T060925ZX/iloli-plugin.git ./plugins/iloli-plugin
 
 > [!NOTE]
-> 如果你的网络环境较差，无法连接到 Github，可以使用 [GitHub Proxy](https://github.akams.cn/) 提供的文件代理加速下载服务
+> 如果你的网络环境较差，无法连接到 Github，可以使用 [GitHub Proxy](https://github.akams.cn/) 提供的文件代理加速下载服务`任选其一即可`
 >
+> ```bash
+> git clone https://github.moeyy.xyz/https://github.com/T060925ZX/iloli-plugin.git ./plugins/iloli-plugin
 > ```
+> ```bash
+> git clone https://gh.qninq.cn/https://github.com/T060925ZX/iloli-plugin.git ./plugins/iloli-plugin
+> ```
+> ```bash
 > git clone https://gitproxy.click/https://github.com/T060925ZX/iloli-plugin.git ./plugins/iloli-plugin
 > ```
 > Gitee源（更新较慢）：
-> ```
+> ```bash
 > git clone https://gitee.com/T060925ZX/iloli-plugin.git ./plugins/iloli-plugin
 > ```
 
@@ -69,4 +75,6 @@ pnpm install --filter=iloli-plugin
 
 | 名单 | 主要贡献 |
 |:----: |:----: |
-| [@Jiaozi](https://github.com/T060925ZX) | 新建文件夹（bushi |
+| [@Jiaozi](https://github.com/T060925ZX) | 新建文件夹 |
+| @李诗雅 | 截图辅助函数 |
+| @通天教主 | 提供功能灵感 |
