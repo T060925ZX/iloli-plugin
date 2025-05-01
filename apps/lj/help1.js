@@ -1,8 +1,8 @@
 import { createHash } from 'crypto';
+import yaml from 'js-yaml';
 import path from 'path';
 import fs from 'fs';
 import Cfg from '../model/Cfg.js';
-
 const pluginDir = path.resolve(process.cwd(), 'plugins/iloli-plugin');
 const tempDir = path.join(pluginDir, 'temp');
 const iconPath = path.join(pluginDir, 'resources', 'icon');
@@ -51,8 +51,8 @@ if (!fs.existsSync(tempDir)) {
   fs.mkdirSync(tempDir, { recursive: true });
 }
 
-// 使用 Cfg 读取 help.yaml 文件
-const helpData = Cfg._getDefaultConfig('help');
+// 读取 help.yaml 文件
+const helpData = yaml.load(fs.readFileSync(yamlPath, 'utf8'));
 
 // 生成 HTML 内容
 const generateHTML = () => {
@@ -87,6 +87,7 @@ const generateHTML = () => {
     <head>
       <meta http-equiv="content-type" content="text/html;charset=utf-8" />
       <style>
+        /* 添加字体定义 */
         @font-face {
           font-family: 'HYWenHei';
           src: url('file://${path.join(pluginDir, 'resources/font/HYWenHei-55W.ttf')}') format('truetype');
@@ -137,29 +138,17 @@ const generateHTML = () => {
           background: rgba(169, 169, 169, 0.1);
           backdrop-filter: blur(10px);
         }
-
-        .head_box .id_text {
-          margin-left: 20px;
-          font-size: 24px;
-        }
-
-        .head_box .day_text {
-          margin-left: 20px;
-          font-size: 20px;
-        }
-
+        .head_box .id_text { margin-left: 20px; font-size: 24px; }
+        .head_box .day_text { margin-left: 20px; font-size: 20px; }
         .data_box {
           padding-left: 20px;
           border-radius: 15px;
-          margin-top: 20px;
-          margin-bottom: 15px;
-          padding: 20px 0px 5px 0px;
+          margin: 20px 0 15px;
+          padding: 20px 0 5px;
           background: rgba(169, 169, 169, 0.1);
           box-shadow: 0 5px 10px 0 rgb(0 0 0 / 15%);
-          position: relative;
           backdrop-filter: blur(10px);
         }
-
         .tab_lable {
           position: absolute;
           top: -10px;
@@ -168,60 +157,43 @@ const generateHTML = () => {
           color: #fff;
           font-size: 14px;
           padding: 3px 10px;
-          border-radius: 15px 0px 15px 15px;
+          border-radius: 15px 0 15px 15px;
           z-index: 20;
         }
-
         .list {
-          padding-left: 20px;
-          padding-right: 0px;
+          padding: 0 0 0 20px;
           display: flex;
           justify-content: flex-start;
           flex-wrap: wrap;
           gap: 5px;
         }
-
         .list .item {
           width: calc(${C}% - 10px);
           display: flex;
           align-items: center;
-          background: #f1f1f1; 
-          padding: 8px 6px 8px 6px;
+          background: #f1f1f1;
+          padding: 8px 6px;
           border-radius: 8px;
-          margin: 10px 0px 10px 0px;
+          margin: 10px 0;
         }
-
         .list .item .icon {
           width: 35px;
           height: 35px;
-          background-repeat: no-repeat;
-          background-size: 100% 100%;
-          position: relative;
           flex-shrink: 0;
-          margin-left: 10px;
-          margin-right: 5px;
+          margin: 0 5px 0 10px;
         }
-
         .list .item .title {
           font-size: 16px;
           margin-left: 6px;
           line-height: 20px;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-          text-rendering: optimizeLegibility;
           text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
-
         .list .item .title .dec {
           font-size: 12px;
           color: #999;
           margin-top: 2px;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-          text-rendering: optimizeLegibility;
           text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
-
         .logo {
           font-size: 14px;
           font-family: "HYWenHei";
@@ -238,23 +210,16 @@ const generateHTML = () => {
       <script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@2.0.3/fetch.min.js"></script>
       <script>
         fetch('https://v1.hitokoto.cn')
-          .then(function(res) {
-            return res.json();
-          })
-          .then(function(data) {
-            var hitokoto = data.hitokoto;
-            document.getElementById('hitokoto').innerText = hitokoto;
-          })
-          .catch(function(err) {
+          .then(res => res.json())
+          .then(data => document.getElementById('hitokoto').innerText = data.hitokoto)
+          .catch(err => {
             console.error(err);
-            var hitokoto = ${yiyan};
-            document.getElementById('hitokoto').innerText = ${yiyan};
-
+            document.getElementById('hitokoto').innerText = '${yiyan}';
           });
       </script>
     </head>
     <body>
-      <div class="container" id="container">
+      <div class="container">
         <div class="head_box">
           <div class="id_text">${H1}</div>
           <h2 class="day_text">${H2}</h2>
@@ -262,7 +227,7 @@ const generateHTML = () => {
         ${items}
         <div id="hitokoto" class="logo">${yiyan}</div>
       </div>
-        <bq>Yunzai & iloli-plugin</bq>
+      <bq>Yunzai & iloli-plugin</bq>
     </body>
     </html>
   `;
@@ -283,7 +248,7 @@ const preRenderHelp = async () => {
     waitUntil: 'networkidle2',
     fullPage: false,
     cacheTime: 3600,
-    timeout: 180000,
+    timeout: 180000, // 增加超时时间至180秒
     scrollToBottom: true,
     encoding: 'binary',
     hideScrollbars: true,
@@ -306,7 +271,7 @@ const preRenderHelp = async () => {
 // 检查 config.yaml 文件变化
 const checkConfigChanges = () => {
   try {
-    const configData = Cfg._getUserConfig('help_config');
+    const configData = yaml.load(fs.readFileSync(configPath, 'utf8'));
     const currentConfigHash = createHash('md5').update(JSON.stringify(configData)).digest('hex');
     const configHashPath = path.join(tempDir, 'config.hash');
     const cachedConfigHash = fs.existsSync(configHashPath) ? fs.readFileSync(configHashPath, 'utf8') : null;
