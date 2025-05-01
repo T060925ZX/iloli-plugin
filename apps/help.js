@@ -12,6 +12,7 @@ import { takeScreenshot } from '../model/takescreenshot.js';
 
 // 全局变量，定义截图路径
 let screenshotPath = path.join(tempDir, 'help.jpg');
+let helpPath = path.join(tempDir, 'help.jpg');
 
 // 封装重新加载配置的函数
 const reloadConfig = () => {
@@ -368,7 +369,6 @@ export class HelpPlugin extends plugin {
   }
 
   async showHelp(e) {
-    let helpPath = path.join(tempDir, 'help.jpg');
     if (fs.existsSync(helpPath)) {
       await e.reply([segment.image(helpPath)]);
     } else {
