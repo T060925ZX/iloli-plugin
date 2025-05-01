@@ -1,6 +1,6 @@
 {
   "name": "iloli-plugin",
-  "version": "1.0.0",
+  "version": "1.2.2",
   "description": "Yunzai 插件",
   "main": "index.js",
   "type": "module",

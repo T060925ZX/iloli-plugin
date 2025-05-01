@@ -18,10 +18,10 @@ export class RandomMute extends plugin {
 
   async randomMute(e) {
     try {
-      // 检查CD（5分钟）
+      // 检查CD
       const now = Date.now();
       const lastUsed = groupCooldowns.get(e.group_id);
-      const cooldownTime = 5 * 60 * 1000; // 5分钟CD（毫秒）
+      const cooldownTime = 30 * 60 * 1000; // CD（毫秒）
       
       if (lastUsed && now - lastUsed < cooldownTime) {
         const remaining = Math.ceil((cooldownTime - (now - lastUsed)) / 1000);
@@ -80,7 +80,7 @@ export class RandomMute extends plugin {
         `👑 身份：${role}`,
         `⏳ 随机禁言时长：${muteMinutes}分${muteSeconds}秒`,
         `🕒 解禁时间：${new Date(now + muteTime * 1000).toLocaleTimeString()}`,
-        `🔄 技能冷却：5分钟`
+        `🔄 技能冷却：30分钟`
       ].join("\n"));
       
     } catch (err) {
