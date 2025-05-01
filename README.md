@@ -33,10 +33,13 @@
 > git clone https://gitee.com/T060925ZX/iloli-plugin.git ./plugins/iloli-plugin
 > ```
 
-#### 2. 安装依赖
+#### 2. 安装依赖 二选一
 
-```
+```bash
 pnpm install --filter=iloli-plugin
+```
+```bash
+cd plugins/iloli-plugin && pnpm i
 ```
 
 ## 功能列表
