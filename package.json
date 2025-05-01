@@ -14,6 +14,8 @@
     "js-yaml": "*",
     "sharp": "*",
     "chinese-to-pinyin": "*",
-    "axios": "*"
+    "axios": "*",
+    "sqlite3": "*",
+    "sqlite": "*"
   }
 }
