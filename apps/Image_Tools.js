@@ -2,7 +2,6 @@ import path from 'path';
 import fs from 'fs';
 import axios from 'axios';
 import { exec } from 'child_process';
-import { plugin } from '../../utils/plugin.js';
 
 const PLUGIN_DIR = path.resolve(process.cwd(), 'plugins/iloli-plugin');
 const TEMP_DIR = path.join(PLUGIN_DIR, 'temp/gif_speed'); 
