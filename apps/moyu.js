@@ -38,9 +38,9 @@ export class moyu extends plugin {
         try {
             await this.reply(segment.image(this.moyuApi), { quote: true , at: false });
         } catch (error) {
-            console.error("获取摸鱼图片失败:", error);
-            await this.reply("摸鱼失败，API请求出错啦~");
+            console.error("获取日报图片失败:", error);
+            await this.reply("API请求出错啦~");
         }
     }
-    
+
 }
