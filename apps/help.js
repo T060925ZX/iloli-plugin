@@ -368,6 +368,7 @@ export class HelpPlugin extends plugin {
   }
 
   async showHelp(e) {
+    const screenshotPath = path.join(tempDir, 'help.jpg');
     if (fs.existsSync(screenshotPath)) {
       await e.reply([segment.image(screenshotPath)]);
     } else {
