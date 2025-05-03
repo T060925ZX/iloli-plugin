@@ -37,7 +37,7 @@ export class LoliconAPI extends plugin {
                 log: false
             }]
         })
-    this.switch = config?.pixiv_enable || true;
+    this.switch = config.pixiv_enable || false;
     }
 
     /** 清除CD */
@@ -66,7 +66,6 @@ export class LoliconAPI extends plugin {
         successCount = 0,
         failureCount = 0
     ) {
-        if (!this.switch) return this.reply('我就喵一声，你懂我意思吧~')
 
         /**
          * 初始化代理（兼容7.0.x和5.0.x
@@ -86,7 +85,10 @@ export class LoliconAPI extends plugin {
         const CDTIME = await redis.get(`${Plugin_name}_${e.group_id}_${e.user_id}_CD`)
 
         if (CDTIME && !e.isMaster) return e.reply('「冷却中」先生，冲太快会炸膛！', true, { recallMsg: 15 })
-
+        
+        // 检测是否开启
+        if (!this.switch) return e.reply('「未开启」请联系管理员开启！', true, { recallMsg: 15 })
+            
         const startMessage = await e.reply(`[${Plugin_name}] 少女祈祷中…`)
 
         await redis.set(`${Plugin_name}_${e.group_id}_${e.user_id}_CD`, moment(new Date()).format('YYYY-MM-DD HH:mm:ss'), { EX: config.pixiv_CD })
