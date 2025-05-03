@@ -368,7 +368,7 @@ export class HelpPlugin extends plugin {
     if (fs.existsSync(screenshotPath)) {
       await e.reply([segment.image(screenshotPath)]);
     } else {
-      await e.reply('帮助图片未生成，请尝试刷新或稍后再试。');
+      await e.reply('帮助图片未生成，请尝试#刷新萝莉帮助');
     }
   }
 

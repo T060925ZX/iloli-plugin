@@ -15,6 +15,10 @@ export class Bro extends plugin {
         {
           reg: "(.*)?能(.*)?(吗|嘛)(.*)?",
           fnc: "canDo"
+        },
+        {
+          reg: "^？$",
+          fnc: "wenhao"
         }
       ]
     })
@@ -41,6 +45,14 @@ export class Bro extends plugin {
     } else {
       await Bot.pickGroup(this.e.group_id).sendMsg('包的');
     }
+    return false;
+  }
+
+  async wenhao() {
+    if (!this.switch) return false
+
+    await Bot.pickGroup(this.e.group_id).sendMsg('你是有什么心事嘛？');
+
     return false;
   }
 }

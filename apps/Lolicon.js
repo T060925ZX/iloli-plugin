@@ -66,7 +66,7 @@ export class LoliconAPI extends plugin {
         successCount = 0,
         failureCount = 0
     ) {
-        if (!this.switch) return false
+        if (!this.switch) return this.reply('我就喵一声，你懂我意思吧~')
 
         /**
          * 初始化代理（兼容7.0.x和5.0.x
